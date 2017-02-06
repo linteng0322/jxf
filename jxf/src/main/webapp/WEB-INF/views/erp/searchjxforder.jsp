@@ -70,6 +70,8 @@
 		$("#salesmanname").val(null);
 		$("#jxforderstatus").val("");
 		$("#ispaid").val(null);
+		$("#fromdate").val(null);
+		$("#todate").val(null);
 	}
 </script>
 
@@ -100,10 +102,10 @@
 					<div class="col-sm-2">
 						<sf:select id="jxforderstatus" path="jxforderstatus"
 							maxlength="20" cssClass="form-control">
-							<sf:option value="" />
-							<sf:option value="allset" />
-							<sf:option value="completed" />
-							<sf:option value="draft" />
+							<sf:option value="" label="全部"/>
+							<sf:option value="allset" label="已匹配"/>
+							<sf:option value="completed" label="已完成"/>
+							<sf:option value="draft" label="草稿"/>
 						</sf:select>
 					</div>
 				</div>
@@ -190,7 +192,7 @@
 
 						<tr>
 							<td><c:out value="${loop.index + 1}" /></td>
-							<td><c:out value="${jxforder.orderId}" /></td>
+							<td><a href="/jxf/jxforder/matchmaterialforjxforder?id=${jxforder.id}"><c:out value="${jxforder.orderId}" /></a></td>
 							<td><c:out value="${jxforder.customer.name}" /></td>
 							<td><c:out value="${jxforder.jxforderstatus=='completed'?'出库完成':'需出库'}" /></td>
 							<%-- <td><c:out value="${jxforder.calweight}" /></td> --%>
