@@ -116,7 +116,7 @@
                         </div>
                      </div>           
                                         
-                    <div class="form-group">
+                    <%-- <div class="form-group">
                         <label for="j_password" class="col-md-3 control-label">
                              <sp:message code="label.verificationcode"/>
                         </label>
@@ -126,7 +126,7 @@
                            <a href="javascript:refreshCaptcha()"> <sp:message code="label.refeshimage"/></a>
                         </div>
                        
-                    </div>
+                    </div> --%>
                     
                     <div class="form-group">  
                          <label class="col-md-3 control-label">

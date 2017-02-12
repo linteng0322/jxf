@@ -178,7 +178,7 @@
 						</div>
 				</div>
 
-				<div class="form-group">
+				<%-- <div class="form-group">
 					<label for="verifyCode" class="col-md-3 control-label"> <sp:message
 							code="label.verificationcode" /><span class="required">*</span>
 					</label>
@@ -188,7 +188,7 @@
 							href="javascript:refreshCaptcha()"> <sp:message
 								code="label.refeshimage" /></a>
 					</div>
-				</div>
+				</div> --%>
 
 				<div class="form-group">
 					<label class="col-md-3 control-label"> </label>
