@@ -14,12 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.jxf.oa.bean.Page;
 import com.jxf.oa.entity.RegistrantValue;
 import com.jxf.oa.entity.User;
 import com.jxf.oa.services.RegisterService;
@@ -56,10 +53,10 @@ public class RegisterController extends BaseController {
 	@RequestMapping("/registerSub")
     public String registerSub(Model model, @Valid @ModelAttribute("registrant") RegistrantValue registrant, BindingResult errors, HttpServletRequest  request) {
 		
-		Boolean isResponseCorrect = imageCaptchaService.validateResponseForID(request.getSession().getId(), registrant.getVerifyCode());
-		if(!isResponseCorrect){
-			errors.rejectValue("verifyCode", "validation.verificationcode.invalid", "Invalid verfication Code");
-		}
+//		Boolean isResponseCorrect = imageCaptchaService.validateResponseForID(request.getSession().getId(), registrant.getVerifyCode());
+//		if(!isResponseCorrect){
+//			errors.rejectValue("verifyCode", "validation.verificationcode.invalid", "Invalid verfication Code");
+//		}
 		
 		if(!registrant.getPassword().equals(registrant.getConfirmPassword())){
 			errors.reject("validation.inconsistpassword.invalid", "Inconsistent password and confirm password");
