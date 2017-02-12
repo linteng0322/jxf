@@ -37,7 +37,7 @@
             <div class="panel-body">
                
                     <div class="form-group">
-                        Congratulations! Save/Update successfully!
+                        <sp:message code="message.success"/>
                     </div>
                     
                     <div class="form-group">	                 
