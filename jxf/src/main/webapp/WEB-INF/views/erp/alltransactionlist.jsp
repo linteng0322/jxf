@@ -87,9 +87,9 @@
 					<div class="col-sm-3">
 						<sf:select id="type" path="type" maxlength="20"
 							cssClass="form-control">
-							<sf:option value="" />
-							<sf:option value="IN" />
-							<sf:option value="OUT" />
+							<sf:option value="" label="全部"/>
+							<sf:option value="IN" label="入库"/>
+							<sf:option value="OUT" label="出库"/>
 						</sf:select>
 					</div>
 				</div>
