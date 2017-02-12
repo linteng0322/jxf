@@ -14,24 +14,7 @@
 
 <%@ include file="../includes/jsheader.jsp"%>
 <script type="text/javascript">
-	function selectMaterial() {
-		var val = $('input:radio[name="materialId"]:checked').val();
-		var materialIdString = $('input:radio[name="materialId"]:checked')
-				.parent().next().text();
-		if (val == null) {
-			alert("Please select one material");
-			return false;
-		} else {
-			$('#materialIdentity', window.opener.document).val(val);
-			materialIdString = materialIdString.replace("\n", "").replace("\n",
-					"").trim();
-			$('#materialIdString', window.opener.document)
-					.val(materialIdString);
-			window.close();
-		}
-		
-		
-	}
+	
 </script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -81,12 +64,6 @@
 							</tr>
 						</c:forEach>
 					</table>
-				</div>
-				<div class="col-sm-2">
-					<button type="button" class="btn btn-primary"
-						onclick="selectMaterial()">
-						<sp:message code="operate.save" />
-					</button>
 				</div>
 			</sf:form>
 		</div>
