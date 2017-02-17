@@ -86,7 +86,7 @@
 		<div class="col-sm-2">
 					<button type="button" class="btn btn-primary"
 						onclick="selectCustomer()">
-						<sp:message code="operate.save" />
+						<sp:message code="operate.selectthis" />
 					</button>
 				</div>
 

@@ -16,7 +16,6 @@
         <version.logback>1.0.6</version.logback>
         <version.spring>3.2.10.RELEASE</version.spring>
         <version.spring.security>3.2.4.RELEASE</version.spring.security>
-        <version.jackson>1.9.13</version.jackson>
         <version.bonecp>0.8.0.RELEASE</version.bonecp>
     </properties>
 
@@ -77,11 +76,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${version.spring}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${version.jackson}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tiles</groupId>

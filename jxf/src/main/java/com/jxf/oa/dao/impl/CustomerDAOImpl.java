@@ -60,6 +60,17 @@ public class CustomerDAOImpl extends BaseDAOImpl implements CustomerDAO{
 
 	        return customers;
        }
+
+		@Override
+		public List<Customer> findByCustomerName(String custname) {
+
+	        Criteria criteria = session().createCriteria(Customer.class);
+
+	        criteria.add(Restrictions.eq("name", custname));
+	        List<Customer> customers = criteria.list();
+
+	        return customers;
+		}
 	    
 	    
 }

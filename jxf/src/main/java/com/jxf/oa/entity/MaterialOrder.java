@@ -19,6 +19,7 @@ public class MaterialOrder extends IdEntity {
 	private Integer id;
 	private Integer jxforderid;// 订单编号
 
+	private String leibie;
 	private String type;// material or materialgroup
 	private Integer mormgidentity;
 	private String materialstatus;// draft=新建未匹配; set=匹配到物料; partial=部分出库;
@@ -58,6 +59,15 @@ public class MaterialOrder extends IdEntity {
 
 	public void setJxforderid(Integer jxforderid) {
 		this.jxforderid = jxforderid;
+	}
+	
+	@Column(name = "LEIBIE")
+	public String getLeibie() {
+		return leibie;
+	}
+
+	public void setLeibie(String leibie) {
+		this.leibie = leibie;
 	}
 
 	@Column(name = "TYPE")

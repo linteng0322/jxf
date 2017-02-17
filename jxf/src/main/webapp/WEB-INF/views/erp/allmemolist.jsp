@@ -16,7 +16,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#allmaterialgroup").addClass("current-menu-item"); //Add "active" class to selected tab  
+		$("#allcustomer").addClass("current-menu-item"); //Add "active" class to selected tab  
 	});
 </script>
 
@@ -29,14 +29,20 @@
 		<div id="csidebar" style="float: left; width: 20%;">
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
+
 		<div style="float: right; width: 80%;">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<sp:message code="label.materialgroup" />
+					<sp:message code="label.memo" />
 				</div>
 			</div>
+			<sf:form servletRelativeAction="searchmemolist" method="post"
+				modelAttribute="memo" cssClass="form-horizontal">
+				<sf:errors path="*" cssClass="alert alert-danger" element="div" />
+			</sf:form>
+
 			<div class="operation-bar">
-				<a href="<c:url value="/materialgroup/creatematerialgroup"/>" title="Register">
+				<a href="<c:url value="/memo/creatememo"/>" title="Register">
 					<span class="glyphicon glyphicon-plus"></span>
 				</a>
 			</div>
@@ -46,36 +52,31 @@
 					<thead>
 						<tr>
 							<th><sp:message code="label.id" /></th>
-							<th><sp:message code="label.materialid" /></th>
-							<th><sp:message code="label.pinming" /></th>
-							<%-- <th><sp:message code="label.materialgroup" /></th> --%>
+							<th><sp:message code="label.client" /></th>
+							<%-- <th><sp:message code="label.phone" /></th>
+							<th><sp:message code="label.address" /></th> --%>
 							<th>&nbsp;</th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
 					<%--@elvariable id="users" type="java.util.List"--%>
-					<c:forEach var="materialgroup" items="${page.list}" varStatus="loop">
-					<c:if test="${materialgroup.materialgroupId!=''}">
+					<c:forEach var="memo" items="${page.list}" varStatus="loop">
 						<tr>
 							<td><c:out value="${loop.index + 1}" /></td>
-							<td><c:out value="${materialgroup.materialgroupId}" /></td>
-							<td><c:out value="${materialgroup.pinming}" /></td>
-							<%-- <td><c:out value="${materialgroup.materialchildren}" /></td> --%>
 							
 							<td><a
-								href="<c:url value="/materialgroup/editmaterialgroup?id=${materialgroup.id}"/>">
+								href="<c:url value="/memo/editmemo?id=${memo.id}"/>">
 									<span class="glyphicon glyphicon-edit"></span>
 							</a></td>
 							<td><a
-								href="<c:url value="/materialgroup/deletematerialgroup?id=${materialgroup.id}"/>">
+								href="<c:url value="/memo/deletememo?id=${memo.id}"/>">
 									<span class="glyphicon glyphicon-trash"></span>
 							</a></td>
 						</tr>
-						</c:if>
 					</c:forEach>
 				</table>
 				<d:pagination page="${page.pageIndex}" total="${page.totalPage}"
-					uri="/materialgroup/allmaterialgrouplist" />
+					uri="/memo/allmemolist" />
 			</div>
 		</div>
 

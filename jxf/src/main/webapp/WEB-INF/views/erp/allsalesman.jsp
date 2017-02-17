@@ -27,6 +27,11 @@
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
 		<div style="float: right; width: 80%;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<sp:message code="label.salesman" />
+				</div>
+			</div>
 			<div class="operation-bar">
 				<a href="<c:url value="/salesman/createsalesman"/>" title="Register">
 					<span class="glyphicon glyphicon-plus"></span>

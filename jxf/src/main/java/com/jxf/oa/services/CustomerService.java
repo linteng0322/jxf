@@ -17,6 +17,8 @@ public interface CustomerService extends BaseService, UserDetailsService {
 	Page<Customer> findAllCustomer(int pageIndex, int pageSize, int userId);
 
 	List<Customer> findCustomersBySearchtext(String searchText);
+
+	List<Customer> findByCustomerName(String custname);
 	
 	
 }

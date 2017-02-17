@@ -22,10 +22,36 @@
 		} else {
 			$("#ordlist").addClass("current-menu-item"); //Add "active" class to selected tab  
 		}
+		initleibietables();
 		setcustomerlist();
 		setlist();
 
 	});
+	function initleibietables() {
+		//首先判断有几种类别，然后加这几种类别的表头
+		//在判断每一种类别有几个materialorder，加上表内容
+		var materialorderliststring = $('input:hidden[id="materialorderliststring"]').val();
+		materialorderlist = materialorderliststring.split(",");
+		var totalorderlength = materialorderlist.length;
+		for(var i = 0; i< totalorderlength; i++){
+			var materialorder = materialorderlist[i].split(";");
+			var leibie = materialorder[0];
+			var materialId = materialorder[1];
+			var thickness = materialorder[2];
+			var color = materialorder[3];
+			var length = materialorder[4];
+			var materialcount = materialorder[5];
+			
+			var x = document.getElementsByName("materialtype");
+			var materialtypelength = x.length;//eg: leibie 5: find i=3, then add 2 more type;
+			if(materialtypelength<leibie){
+				for(var y = 0; y < leibie-materialtypelength; y++){
+					addmoreType();
+				}
+			}
+			addElement(leibie, materialId, thickness, color, length, materialcount);
+		}
+	}
 	function setcustomerlist() {
 		$.ajax({
 			type : "POST",
@@ -34,7 +60,7 @@
 			//data:"",
 			contentType : "text/html; charset=utf-8",
 			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				alert(1);
+				alert("出错了，请重试！");
 			},
 			success : function(data) {
 				if (data != "true") {
@@ -119,80 +145,71 @@
 				'salesman', popup_property);
 	}
 
-	function inputthisrow(row, input) {
+	function inputthisrow(typenumber, row, input) {
 		var materialstring = input.value;
 		var materialparams = materialstring.split(";");
-		$('#materialId' + row).val(materialparams[0]);
-		$('#thickness' + row).val(materialparams[1]);
-		$('#color' + row).val(materialparams[2]);
-		$('#length' + row).val(materialparams[3]);
+		$('#materialId_'+ typenumber+'_'+ row).val(materialparams[0]);
+		$('#thickness_' + typenumber+'_'+ row).val(materialparams[1]);
+		$('#color_' + typenumber+'_'+ row).val(materialparams[2]);
+		$('#length_' + typenumber+'_'+ row).val(materialparams[3]);
 	}
-	function addmultipleElement() {
+	function addmultipleElement(typenumber) {
 		for (var i = 0; i < 10; i++) {
-			addElement();
+			addElement(typenumber, "","","","","");
 		}
-		//setlist();
 	}
-	function addElement() {
-		var x = document.getElementsByName("sequence");
-		var i = x.length;
-		var fid = "sequence";
-		var identity = "identity";
-		var materialId = "materialId";
-		var thickness = "thickness";
-		var color = "color";
-		var length = "length";
-		var materialcount = "materialcount";
-		var stock = "stock";
-		var materialtype = "materialtype";
-		//var i = 10;
+	function addElement(typenumber, materialId, thickness, color, length, materialcount) {
+		//should find that table and then find the sequence
+		var thistable = $('#searchmaterialtable'+typenumber, document);
+		//document.getElementsByName("searchmaterialtable"+typenumber);
+		//var x = document.getElementsByName("sequence");
+		//$("input[name="元素名词"]")
+		var i = $("input[name='sequence_"+typenumber+"']",thistable).length;
+		//var i = rows.lentgh;
+		//var i = x.length;
 		i = i + 1;
-		var id = $(this).parent().next().text();
-		id = id.replace("\n", "").replace("\n", "").trim();
-		var name = $(this).parent().next().next().text();
-		var unitprice = $(this).parent().next().next().next().text();
-
-		//var materialorder = new MaterialOrder();
-		//materialorderlist.add(materialorder);
-		/* fid = fid + i; */
-		$('#searchmaterialtable', document)
-				.append(
-						"<tr><td>"
-								+ "<input id='"
-								+ "sequence"+i
-								+ "' type='text' name='sequence' value=" +i + " style='width: 100px; padding: 4px;' readonly='readonly'/>"
-								+ "<input id='"
-								+ identity+i
-								+ "' type='hidden' name='identity' value='' style='width: 100px; padding: 4px;' />"
+		
+		var	appendstring = 		"<tr><td>"
+								+ "<input id='sequence_"+typenumber+"_"+i+ "' name='sequence_"+typenumber+"' value=" +i + " style='width: 30px; padding: 4px; border: none; background: transparent;' readonly='readonly'/>"
+								+ "<input id='identity"+typenumber+"_"+i+ "' type='hidden' name='identity_"+typenumber+"' value='' style='width: 100px; padding: 4px;' />"
+								+ "<input id='materialtype_"+typenumber+"_"+i+ "' type='hidden' name='leibie_"+typenumber+"' value='"+typenumber+"' style='width: 100px; padding: 4px;' />"
 								+ "</td><td>"
-								+ "<input id='"
-								+ materialId
-								+ i
-								+ "' type='text' name='materialId' list='json-datalist' style='width: 100px; padding: 4px; text-transform:uppercase;'"
-								+ "oninput='inputthisrow("
-								+ i
-								+ ", this)'/>"
+								+ "<input id='materialId_"+typenumber+"_"+i+ "' type='text' name='materialId_"+typenumber+"' value='"+materialId+"' list='json-datalist' style='width: 280px; padding: 4px; text-transform:uppercase;'"
+								+ "oninput='inputthisrow("+typenumber+","+ i+ ", this)'/>"
 								+ "<datalist id='json-datalist'></datalist>"
 								+ "</td><td>"
-								+ "<input id='"
-								+thickness+i
-								+ "' type='text' name='thickness' style='width: 100px; padding: 4px;' />"
+								+ "<input id='thickness_"+typenumber+"_"+i+ "' type='text' name='thickness_"+typenumber+"' value='"+thickness+"' style='width: 100px; padding: 4px;' />"
 								+ "</td><td>"
-								+ "<input id='"
-								+color+i
-								+ "' type='text' name='color' style='width: 100px; padding: 4px;' />"
+								+ "<input id='color_"+typenumber+"_"+i+ "' type='text' name='color_"+typenumber+"' value='"+color+"' style='width: 100px; padding: 4px;' />"
 								+ "</td><td>"
-								+ "<input id='"
-								+length+i
-								+ "' type='text' name='length' style='width: 100px; padding: 4px;' />"
+								+ "<input id='length_"+typenumber+"_"+i+ "' type='text' name='length_"+typenumber+"' value='"+length+"' style='width: 100px; padding: 4px;' />"
 								+ "</td><td>"
-								+ "<input id='"
-								+materialcount+i
-								+ "' type='text' name='materialcount' style='width: 100px; padding: 4px;' />"
-								+ "</td></tr>");
-
+								+ "<input id='materialcount_"+typenumber+"_"+i+ "' type='text' name='materialcount_"+typenumber+"' value='"+materialcount+"' style='width: 100px; padding: 4px;' />"
+								+ "</td></tr>";
+								
+			$('#searchmaterialtable'+typenumber, document).append(appendstring);
+			//document.getElementsByName("searchmaterialtable1").append(appendstring);
 	}
-
+	function addmoreType() {
+		
+		addmaterialtypetable();
+	}
+	
+	function addmaterialtypetable() {
+		var x = document.getElementsByName("materialtype");
+		var i = x.length+1;
+		var appendstring = "<a onclick='addmultipleElement("+i+")' title='Register'> <span class='glyphicon glyphicon-plus'>类别"+i+"</span></a><p>"
+			+"<div id='materialtype"+i+"' name='materialtype' class='panel panel-default'>"
+			+"<table id='searchmaterialtable"+i+"' class='table table-striped table-bordered table-hover table-condensed'>"
+			+"	<thead><tr><th><sp:message code='label.id' /></th>"
+			+"			<th><sp:message code='label.material' /></th>"
+			+"			<th><sp:message code='label.thickness' /></th>"
+			+"			<th><sp:message code='label.color' /></th>"
+			+"			<th><sp:message code='label.length' /></th>"
+			+"			<th><sp:message code='label.count' /></th></tr></thead><tbody></tbody></table>"
+			+"";
+			$('#materialtypelist', document).append(appendstring);
+	}
 	function addadditionalmaterial() {
 		var x = document.getElementsByName("additionalsequence");
 		var i = x.length;
@@ -204,7 +221,7 @@
 						"<tr><td>"
 								+ "<input id='"
 								+ "additionalsequence"+i +"'"
-								+ " type='text' name='additionalsequence' value=" +i + " style='width: 100px; padding: 4px;' />"
+								+ " name='additionalsequence' value=" +i + " style='width: 30px; padding: 4px; border: none; background: transparent;' />"
 								+ "</td><td>"
 								+ "<input id='additionalmaterialname"+i + "'"
 								+ " type='text' name='additionalmaterialname' style='width: 100px; padding: 4px;' />"
@@ -220,13 +237,56 @@
 		if (salesmanname == "") {
 			$('#salesmanid').val("");
 		}
+		//共i种类型
+		var materialtypelements = document.getElementsByName("materialtype");
+		var typelength = materialtypelements.length;
 		var appendstring;
+		var flag = "";
+		//每一种类型，分别添加
+		for(var type = 1; type <= typelength; type ++){
+			//里面写添加到materialchildstring，逐个找到类型，然后逐个找到id，在添加。每一种类型她们每个字段id应该是：thickness_type_id 
+			//找到type=1，2，3的各种表格长度var x = document.getElementsByName("sequence");
+		//var i = x.length;
+			var materialtableelements = document.getElementsByName("sequence_"+type);
+			var materialtablelength = materialtableelements.length;
+			for(var l = 1; l<= materialtablelength; l++){
+				//var elementid = $('input[name="sequence_'+type+'_'+l+'"]',document).val();
+				var elementid = "identity_"+type+"_"+l;
+				var identity = $('input:hidden[id='+elementid+']').val();
+				elementid = "materialId_"+type+"_"+l;//materialorder materialId
+				var materialId = $('input:text[id="' + elementid + '"]').val();
+				elementid = "thickness_"+type+"_"+l;
+				var thickness = $('input:text[id="' + elementid + '"]').val();
+				elementid = "color_"+type+"_"+l;
+				var color = $('input:text[id="' + elementid + '"]').val();
+				elementid = "length_"+type+"_"+l;
+				var length = $('input:text[id="' + elementid + '"]').val();
+				elementid = "materialcount_"+type+"_"+l;
+				var materialcount = $('input:text[id="' + elementid + '"]').val();
+				if (materialId != "") {
+					if (flag == "") {
+						appendstring = identity + ";" + type + ";" + materialId + ";"
+								+ thickness + ";" + color + ";" + length + ";"
+								+ materialcount;
+						flag = "has";
+					} else {
+						appendstring = appendstring + "," + identity + ";" + type + ";"
+								+ materialId + ";" + thickness + ";" + color + ";"
+								+ length + ";" + materialcount;
+					}
+				}
+			}
+		}
+		
+		
+		/* var appendstring;
 		var additionalmaterialstring;
 		var x = document.getElementsByName("sequence");
 		var i = x.length;
 		var materialorderstring;
 		var flag = "";
 		for (var j = 1; j <= i; j++) {
+			var elementid = $("input[name='sequence']",materialelement).val();
 			var elementid = "sequence" + j;
 			var sequence = $('input:text[id="' + elementid + '"]').val();
 			elementid = "identity" + j;//materialorder identity
@@ -253,7 +313,7 @@
 							+ length + ";" + materialcount;
 				}
 			}
-		}
+		} */
 		$('#materialchildrenstring').val(appendstring);
 		var x = document.getElementsByName("additionalsequence");
 		var i = x.length;
@@ -296,6 +356,7 @@
 				modelAttribute="order" cssClass="form-horizontal">
 				<sf:errors path="*" cssClass="alert alert-danger" element="div" />
 				<sf:hidden id="id" path="id" />
+				<sf:hidden id="materialorderliststring" path="materialorderliststring" />
 				<%-- <sf:hidden path="type" /> --%>
 				<div class="panel panel-default">
 					<!-- Default panel contents -->
@@ -312,19 +373,12 @@
 								maxlength="20" cssClass="form-control" />
 						</div>
 					</div>
-					<%-- <sf:input type="hidden" id="customerIdentity"
-						name="customerIdentity" path="customer.id"
-						onclick="searchcustomer()" required="required" maxlength="20"
-						cssClass="form-control" /> --%>
 					<div class="form-group">
 						<sf:label path="customer.name" cssClass="col-sm-2 control-label">
 							<sp:message code="label.customer" />
 							<span class="required">*</span>
 						</sf:label>
 						<div class="col-sm-2">
-							<%-- <sf:input id="customerFamilyName" path="customer.name"
-								required="required" onclick="searchcustomer()" maxlength="20"
-								cssClass="form-control" /> --%>
 							<input id="customerFamilyName" type="search" name="customer.name"
 								required="required" list="custlist" maxlength="50" value='<c:out value="${order.customer.name}"/>'
 								style="width: 350px; background: white; border: 1px solid #d3d3d3; box-shadow: inset 0 0 2px #ccc; padding: 7px 6px; color: #77797e;" />
@@ -335,65 +389,74 @@
 				</div>
 				<datalist id="json-datalist">
 				</datalist>
-				<a onclick="addmultipleElement()" title="Register"> <span
-					class="glyphicon glyphicon-plus"></span>
+				<a onclick="addmoreType()" title="Register"> <span
+					class="glyphicon glyphicon-plus">添加新类别</span>
 				</a>
-				<div class="panel panel-default">
-					<table id="searchmaterialtable"
-						class="table table-striped table-bordered table-hover table-condensed">
-						<thead>
-							<tr>
-								<th><sp:message code="label.id" /></th>
-								<th><sp:message code="label.material" /></th>
-								<th><sp:message code="label.thickness" /></th>
-								<th><sp:message code="label.color" /></th>
-								<th><sp:message code="label.length" /></th>
-								<th><sp:message code="label.count" /></th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach var="ordermaterial" items="${order.materialorderlist}"
-								varStatus="loop">
-
+				<div id="materialtypelist">
+					<%-- <a onclick="addmultipleElement()" title="Register"> <span
+						class="glyphicon glyphicon-plus"></span>
+					</a>
+					<div id="materialtype" class="panel panel-default">
+						<table id="searchmaterialtable"
+							class="table table-striped table-bordered table-hover table-condensed">
+							<thead>
 								<tr>
-									<td><input id='sequence<c:out value="${loop.index+1}"/>'
-										name="sequence" type="text" value="${loop.index+1}"
-										style='width: 100px; padding: 4px;' /> <input
-										id='identity<c:out value="${loop.index+1}"/>' name="identity"
-										type="hidden" value="${ordermaterial.id}"
-										style='width: 100px; padding: 4px;' /></td>
-									<td><input list="json-datalist"
-										id='materialId<c:out value="${loop.index+1}"/>'
-										name="materialId" type="text"
-										value='<c:out value="${ordermaterial.orderMaterialId}"/>'
-										style='width: 100px; padding: 4px; text-transform: uppercase'
-										oninput="inputthisrow(<c:out value="${loop.index+1}"/>, this)" />
-										<datalist id="json-datalist">
-										</datalist></td>
-									<td><input id='thickness<c:out value="${loop.index+1}"/>'
-										name="thickness" type="text"
-										value='<c:out value="${ordermaterial.orderThickness}"/>'
-										style='width: 100px; padding: 4px;' /></td>
-									<td><input id='color<c:out value="${loop.index+1}"/>'
-										name="color" type="text"
-										value='<c:out value="${ordermaterial.orderColor}"/>'
-										style='width: 100px; padding: 4px;' /></td>
-									<td><input id='length<c:out value="${loop.index+1}"/>'
-										name="length" type="text"
-										value='<c:out value="${ordermaterial.orderLength}"/>'
-										style='width: 100px; padding: 4px;' /></td>
-									<td><input
-										id='materialcount<c:out value="${loop.index+1}"/>'
-										name="materialcount" type="text"
-										value='<c:out value="${ordermaterial.orderCount}"/>'
-										style='width: 100px; padding: 4px;' /></td>
+									<th><sp:message code="label.id" /></th>
+									<th><sp:message code="label.material" /></th>
+									<th><sp:message code="label.thickness" /></th>
+									<th><sp:message code="label.color" /></th>
+									<th><sp:message code="label.length" /></th>
+									<th><sp:message code="label.count" /></th>
 								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								<c:forEach var="ordermaterial" items="${order.materialorderlist}"
+									varStatus="loop">
+	
+									<tr>
+										<td><input id='sequence<c:out value="${loop.index+1}"/>'
+											name="sequence" type="text" value="${loop.index+1}"
+											style='width: 100px; padding: 4px;' /> <input
+											id='identity<c:out value="${loop.index+1}"/>' name="identity"
+											type="hidden" value="${ordermaterial.id}"
+											style='width: 100px; padding: 4px;' />
+											<input id='leibie<c:out value="${loop.index+1}"/>'
+											name="leibie" type="text" value="${ordermaterial.leibie}"
+											style='width: 100px; padding: 4px;' /></td>
+										<td><input list="json-datalist"
+											id='materialId<c:out value="${loop.index+1}"/>'
+											name="materialId" type="text"
+											value='<c:out value="${ordermaterial.orderMaterialId}"/>'
+											style='width: 100px; padding: 4px; text-transform: uppercase'
+											oninput="inputthisrow(<c:out value="${loop.index+1}"/>, this)" />
+											<datalist id="json-datalist">
+											</datalist></td>
+										<td><input id='thickness<c:out value="${loop.index+1}"/>'
+											name="thickness" type="text"
+											value='<c:out value="${ordermaterial.orderThickness}"/>'
+											style='width: 100px; padding: 4px;' /></td>
+										<td><input id='color<c:out value="${loop.index+1}"/>'
+											name="color" type="text"
+											value='<c:out value="${ordermaterial.orderColor}"/>'
+											style='width: 100px; padding: 4px;' /></td>
+										<td><input id='length<c:out value="${loop.index+1}"/>'
+											name="length" type="text"
+											value='<c:out value="${ordermaterial.orderLength}"/>'
+											style='width: 100px; padding: 4px;' /></td>
+										<td><input
+											id='materialcount<c:out value="${loop.index+1}"/>'
+											name="materialcount" type="text"
+											value='<c:out value="${ordermaterial.orderCount}"/>'
+											style='width: 100px; padding: 4px;' /></td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div> --%>
 				</div>
+				
 				<a onclick="addadditionalmaterial()" title="Register"> <span
-					class="glyphicon glyphicon-plus"></span>
+					class="glyphicon glyphicon-plus"><sp:message code="label.additionalmaterial" /></span>
 				</a>
 				<div class="panel panel-default">
 					<table id="additionalmaterialtable"
@@ -411,7 +474,7 @@
 								<tr>
 									<td><input
 										id='additionalsequence<c:out value="${loop.index+1}"/>'
-										name="additionalsequence" type="text" value="${loop.index+1}"
+										name="additionalsequence" value="${loop.index+1}"
 										style='width: 100px; padding: 4px;' /></td>
 									<td><input
 										id='additionalmaterialname<c:out value="${loop.index+1}"/>'
@@ -439,7 +502,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<sf:label path="salesman.name" cssClass="col-sm-2 control-label">
+					<sf:label path="memo" cssClass="col-sm-2 control-label">
 						备注
 					</sf:label>
 					<div class="col-sm-2">

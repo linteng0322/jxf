@@ -123,6 +123,12 @@
 				'${pageContext.request.contextPath}/transaction/searchelementtry?uiElement='
 						+ uiElement, 'material', popup_property);
 	}
+	function addmultipleElement() {
+		for (var i = 0; i < 10; i++) {
+			addElement();
+		}
+		//setlist();
+	}
 	function addElement() {
 		var x = document.getElementsByName("materialchildren");
 		var i = x.length;
@@ -300,7 +306,7 @@
 				</div>
 				<datalist id="json-datalist">
 				</datalist>
-				<a onclick="addElement()" title="Register"> <span
+				<a onclick="addmultipleElement()" title="Register"> <span
 					class="glyphicon glyphicon-plus"></span>
 				</a>
 				<div class="panel panel-default">

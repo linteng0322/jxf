@@ -112,6 +112,13 @@ public class MaterialController extends BaseController {
 		model.addAttribute("material", material);
 		return "erp/editmaterial";
 	}
+	
+	@RequestMapping("copymaterial")
+	public String copyMaterial(Model model, Material material, Errors errors) {
+		material = materialService.findById(Material.class, material.getId());
+		model.addAttribute("material", material);
+		return "erp/creatematerial";
+	}
 
 	@RequestMapping("/saveeditmaterial")
 	public String saveeditMaterial(Model model, @Valid @ModelAttribute("material") Material material, Errors errors) {

@@ -75,9 +75,8 @@ public class CustomerController extends BaseController {
 		
 		String custname = customer.getName();
 		Customer trycustomer = new Customer();
-		trycustomer.setName(custname);
-		List trycustomers = customerService.findAllByExample(trycustomer);
-		if(trycustomers !=null){
+		List trycustomers = customerService.findByCustomerName(custname);
+		if(trycustomers !=null && trycustomers.size() !=0 ){
 			errors.reject("validation.exist", new String[] { custname }, "Name already exits!");
 		}
 
@@ -133,7 +132,7 @@ public class CustomerController extends BaseController {
 	// for pop up of transaction
 	@RequestMapping("searchcustomer")
 	public String searchCustomer(Model model, @Valid @ModelAttribute("customer") Customer customer, Errors errors) {
-		List<Customer> customerList = customerService.findAllByExample(customer);
+		List<Customer> customerList = customerService.findCustomersBySearchtext(customer.getName());
 		model.addAttribute("customerlist", customerList);
 		model.addAttribute("customer", customer);
 		return "erp/searchcustomerlist";

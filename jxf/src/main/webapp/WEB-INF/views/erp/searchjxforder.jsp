@@ -85,6 +85,10 @@
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
 		<div style="float: right; width: 80%;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+						<sp:message code="label.orderreport" />
+					</div>
 			<sf:form servletRelativeAction="searchjxforder" method="post"
 				modelAttribute="jxforder" cssClass="form-horizontal">
 				<sf:errors path="*" cssClass="alert alert-danger" element="div" />
@@ -149,12 +153,25 @@
 							cssClass="form-control" />
 					</div>
 				</div>
-				<div class="form-group">
+				<%-- <div class="form-group">
 					<sf:label path="fromdate" cssClass="col-sm-3 control-label">
 						已付款
 					</sf:label>
 					<div class="col-sm-3">
 						<sf:checkbox path="ispaid"/>
+					</div>
+				</div> --%>
+				<div class="form-group">
+					<sf:label path="ispaid" cssClass="col-sm-3 control-label">
+							付款
+					</sf:label>
+					<div class="col-sm-2">
+						<sf:select id="ispaid" path="ispaid"
+							maxlength="10" cssClass="form-control">
+							<sf:option value="" label="全部"/>
+							<sf:option value="true" label="已付款"/>
+							<sf:option value="false" label="未付款"/>
+						</sf:select>
 					</div>
 				</div>
 				<div class="form-group">
@@ -170,6 +187,7 @@
 					</div>
 				</div>
 			</sf:form>
+			</div>
 			<div class="panel panel-default">
 				<table
 					class="table table-striped table-bordered table-hover table-condensed">

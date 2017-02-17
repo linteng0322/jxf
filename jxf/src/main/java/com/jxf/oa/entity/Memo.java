@@ -16,8 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "JXFORDER")
-public class JXFOrder extends IdEntity {
+@Table(name = "MEMO")
+public class Memo extends IdEntity {
 
 	private Integer id;
 	private String orderId;// auto generated based on time;
@@ -43,10 +43,10 @@ public class JXFOrder extends IdEntity {
 	private String materialorderpricestring;//save all unit price of all types
 	private String materialorderliststring;//for display of all materialorder
 	
-	public JXFOrder() {
+	public Memo() {
 	}
 
-	public JXFOrder(Integer id) {
+	public Memo(Integer id) {
 		this.id = id;
 	}
 
@@ -251,7 +251,7 @@ public class JXFOrder extends IdEntity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		JXFOrder other = (JXFOrder) obj;
+		Memo other = (Memo) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

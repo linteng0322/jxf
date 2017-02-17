@@ -10,22 +10,22 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.jxf.oa.bean.Page;
-import com.jxf.oa.dao.CustomerDAO;
-import com.jxf.oa.entity.Customer;
-import com.jxf.oa.services.CustomerService;
+import com.jxf.oa.dao.MemoDAO;
+import com.jxf.oa.entity.Memo;
+import com.jxf.oa.services.MemoService;
 
 /**
  * Description Here
  *
  * @author Michael
  */
-@Service("customerService")
-public class CustomerServiceImpl extends BaseServiceImpl implements CustomerService {
+@Service("memoService")
+public class MemoServiceImpl extends BaseServiceImpl implements MemoService {
 	 @Autowired  
 	 private HttpSession session;  
 	 
 	 @Autowired  
-	 private CustomerDAO customerDAO;
+	 private MemoDAO memoDAO;
 
 	@Override
 	public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
@@ -34,21 +34,15 @@ public class CustomerServiceImpl extends BaseServiceImpl implements CustomerServ
 	}
 
 	@Override
-	public Page<Customer> findAllCustomer(int pageIndex, int pageSize,int userId) {
+	public Page<Memo> findAllMemo(Integer page, int pageSize, Integer userId) {
 		// TODO Auto-generated method stub
-		return customerDAO.findCustomer(pageIndex, pageSize, userId);
+		return memoDAO.findAllMemo(page, pageSize, userId);
 	}
 
 	@Override
-	public List<Customer> findCustomersBySearchtext(String searchText) {
+	public List<Memo> findMemoListByExample(Memo memo, Integer userId) {
 		// TODO Auto-generated method stub
-		return customerDAO.findCustomersBySearchtext(searchText);
+		return memoDAO.findMemoListByExample(memo, userId);
 	}
 
-	@Override
-	public List<Customer> findByCustomerName(String custname) {
-		// TODO Auto-generated method stub
-		return customerDAO.findByCustomerName(custname);
-	}
-	 
 }

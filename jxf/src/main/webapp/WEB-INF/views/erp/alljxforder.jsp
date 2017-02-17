@@ -38,6 +38,10 @@
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
 		<div style="float: right; width: 80%;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+						<sp:message code="label.allorder" />
+					</div>
 			<div class="operation-bar">
 				<a href="<c:url value="/jxforder/out"/>" title="Register"> <span
 					class="glyphicon glyphicon-plus"></span>
@@ -52,7 +56,7 @@
 							<th><sp:message code="label.order" /></th>
 							<th><sp:message code="label.client" /></th>
 							<th><sp:message code="label.status" /></th>
-							<th><sp:message code="label.calweight" /></th>
+							<%-- <th><sp:message code="label.calweight" /></th> --%>
 							<th><sp:message code="label.actweight" /></th>
 							<th>总金额</th>
 							<th><sp:message code="label.payment" /></th>
@@ -72,8 +76,17 @@
 							</a></td>
 							<%-- <td><c:out value="${material.parent.materialId}" /></td> --%>
 							<td><c:out value="${jxforder.customer.name}" /></td>
-							<td><c:out value="${jxforder.jxforderstatus=='completed'?'出库完成':'需出库'}" /></td>
-							<td><c:out value="${jxforder.calweight}" /></td>
+							<td>
+							<c:if test="${jxforder.jxforderstatus=='completed'}"><c:out value="出库完成"></c:out></c:if>
+							<c:if test="${jxforder.jxforderstatus=='partial'}"><a
+									href="<c:url value="/jxforder/matchmaterialforjxforder?id=${jxforder.id}"/>"
+									style='color: red'><c:out value="部分出库"></c:out></a></c:if>
+							<c:if test="${jxforder.jxforderstatus=='draft'}"><c:out value="草稿"></c:out></c:if>
+							<c:if test="${jxforder.jxforderstatus=='allset'}"><a
+									href="<c:url value="/jxforder/matchmaterialforjxforder?id=${jxforder.id}"/>"
+									style='color: red'><c:out value="需出库"></c:out></a></c:if>
+							<%-- <c:out value="${jxforder.jxforderstatus=='completed'?'出库完成':${jxforder.jxforderstatus=='partial'?'部分出库':'需出库'}" /></td> --%>
+							<%-- <td><c:out value="${jxforder.calweight}" /></td> --%>
 							<td><c:out value="${jxforder.actweight}" /></td>
 							<td><c:out value="${jxforder.totalincome}" /></td>
 							<c:if test="${jxforder.ispaid==true}">
@@ -110,7 +123,7 @@
 					uri="/jxforder/alljxforder" />
 			</div>
 		</div>
-
+		</div>
 	</div>
 
 	<%@ include file="../includes/footer.jsp"%>

@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -85,19 +86,19 @@ public class JXFOrderController extends BaseController {
 		SimpleDateFormat sf = new SimpleDateFormat(TIME_FORMAT);
 		List<JXFOrder> jxforderlist = jxforderService.findJxfOrderListByExample(order, user.getId());
 
-		Double listcalweight = 0.0;
+		//Double listcalweight = 0.0;
 		Double listactweight = 0.0;
 		Double listtotalincome = 0.0;
 		for (int i = 0; i < jxforderlist.size(); i++) {
 			JXFOrder o = jxforderlist.get(i);
-			if (o.getCalweight() != null)
-				listcalweight = listcalweight + o.getCalweight();
+			//if (o.getCalweight() != null)
+				//listcalweight = listcalweight + o.getCalweight();
 			if (o.getActweight() != null)
 				listactweight = listactweight + o.getActweight();
 			if (o.getTotalincome() != null)
 				listtotalincome = listtotalincome + o.getTotalincome();
 		}
-		model.addAttribute("listcalweight", listcalweight);
+		//model.addAttribute("listcalweight", listcalweight);
 		model.addAttribute("listactweight", listactweight);
 		model.addAttribute("listtotalincome", listtotalincome);
 		model.addAttribute("fromdate", "");
@@ -121,7 +122,7 @@ public class JXFOrderController extends BaseController {
 		return "erp/jxforder";
 	}
 
-	// use this for save and edit
+	// use this for new and save
 	@RequestMapping("/savecreateorder")
 	public String savecreateOrder(Model model, @Valid @ModelAttribute JXFOrder order, String materialchildrenstring,
 			Errors errors) {
@@ -198,7 +199,7 @@ public class JXFOrderController extends BaseController {
 					MaterialOrder mo = new MaterialOrder();
 					String materialparams[] = materialstring.split(";");// 根据分隔符，拿到每一个material的各个字段值
 					if (materialparams != null && materialparams.length > 0) {
-						String materialid = materialparams[1];// ordermaterialId
+						String materialid = materialparams[2];// ordermaterialId
 						if (materialid != null && materialid != "") {
 							mo.setOrderMaterialId(materialid.toUpperCase());
 							String idstring = materialparams[0];// identity, if
@@ -207,21 +208,24 @@ public class JXFOrderController extends BaseController {
 																// update; else
 																// save this
 																// material
+							String materialtypestring = null;
+							materialtypestring = materialparams[1]; // materialtype
+							
 							String thicknessstring = null;
-							if (materialparams.length > 2) {
-								thicknessstring = materialparams[2];// orderThickness
+							if (materialparams.length > 3) {
+								thicknessstring = materialparams[3];// orderThickness
 							}
 							String colorstring = null;
-							if (materialparams.length > 3) {
-								colorstring = materialparams[3];// orderColor
+							if (materialparams.length > 4) {
+								colorstring = materialparams[4];// orderColor
 							}
 							String lengthstring = null;
-							if (materialparams.length > 4) {
-								lengthstring = materialparams[4];// orderLength
+							if (materialparams.length > 5) {
+								lengthstring = materialparams[5];// orderLength
 							}
 							String countstring = null;
-							if (materialparams.length > 5) {
-								countstring = materialparams[5];// orderCount
+							if (materialparams.length > 6) {
+								countstring = materialparams[6];// orderCount
 							}
 							Double thickness = null;
 							if (thicknessstring != null && thicknessstring.length() > 0)
@@ -232,6 +236,7 @@ public class JXFOrderController extends BaseController {
 							Integer count = null;
 							if (countstring != null && countstring.length() > 0)
 								count = Integer.parseInt(countstring);
+							mo.setLeibie(materialtypestring);
 							mo.setOrderThickness(thickness);
 							mo.setOrderColor(colorstring);
 							mo.setOrderLength(length);
@@ -280,22 +285,48 @@ public class JXFOrderController extends BaseController {
 					}
 				}
 			}
-			Double calWeight = 0.0;
-			// set calculated weight
+			String calWeight = "";
+			// set calculated weight 区分不同类型算calcuweight，
+			//首先算出一共多少种类型，还是不需要算类型，直接往一个数组里面设置，比如type=1的weight叠加起来，直到所有materialorder便利结束。用Hashmap？
+			HashMap<String, Double> hm = new HashMap();
 			for (int i = 0; i < list.size(); i++) {
 				// find the calculated weight;
 				MaterialOrder mo = list.get(i);
+				
+				
 				Double mWeight = 0.0;
 				if (mo.getMaterialWeight() != null && mo.getOrderCount() != null) {
 					mWeight = mo.getMaterialWeight() * mo.getOrderCount();
 				}
-				calWeight = calWeight + mWeight;
+				String leibie = mo.getLeibie();
+				if(hm.get(leibie)==null){
+					hm.put(leibie, (double) 0);
+				}
+				hm.put(leibie, hm.get(leibie)+mWeight);
+				
 			}
+//			for (int i = 1; i<=hm.keySet().size(); i++){
+//				Object key = hm.keySet()[i];
+//				if(i==1)
+//					calWeight = hm.get(i).toString();
+//				else
+//					calWeight = calWeight + "," + hm.get(i);
+//			}
+			
+			Iterator iterator = hm.keySet().iterator();                
+            while (iterator.hasNext()) {    
+             Object key = iterator.next();
+             if(calWeight.equals(""))
+            	 calWeight = key+";"+hm.get(key).toString();   
+             else
+            	 calWeight += ","+key+";"+hm.get(key).toString();
+            } 
 			workingorder.setCalweight(calWeight);
 		}
 		// check whether allset
 
 		// 所有物料全部匹配，才发货
+		workingorder.setJxforderstatus("draft");
 		for (int i = 0; i < list.size(); i++) {
 			MaterialOrder mo = list.get(i);
 			if (mo.getMaterialstatus() != null && mo.getMaterialstatus().equals("draft")) {
@@ -356,8 +387,23 @@ public class JXFOrderController extends BaseController {
 		order = jxforderService.findById(JXFOrder.class, order.getId());
 		MaterialOrder mo = new MaterialOrder();
 		mo.setJxforderid(order.getId());
-		List materialorderlist = materialorderService.findAllByExample(mo);
+		List<MaterialOrder> materialorderlist = materialorderService.findAllByExample(mo);
+		String materialorderliststring = "";
+		for(int i = 0; i<materialorderlist.size(); i++) {
+			MaterialOrder tmp = materialorderlist.get(i);
+			String thicknessstring = (tmp.getOrderThickness()==null)?"":tmp.getOrderThickness().toString();
+			String lengthstring = (tmp.getOrderLength()==null)?"":tmp.getOrderLength().toString();
+			String countstring = (tmp.getOrderCount()==null)?"":tmp.getOrderCount().toString();
+			String thistmp = tmp.getLeibie()+";"+tmp.getOrderMaterialId()+";"+thicknessstring+";"+tmp.getOrderColor()+";"+lengthstring+";"+countstring;
+			if (i==0){
+				materialorderliststring += thistmp;
+			}else{
+				materialorderliststring += "," + thistmp;
+			}
+		}
+		//model.addAttribute("materialorderliststring", materialorderliststring);
 		order.setMaterialorderlist(materialorderlist);
+		order.setMaterialorderliststring(materialorderliststring);
 		model.addAttribute("order", order);
 		String additionalmaterialstring = order.getAdditionalmaterialstring();
 		if (additionalmaterialstring != null && additionalmaterialstring.length() > 0) {
@@ -395,8 +441,25 @@ public class JXFOrderController extends BaseController {
 		order = jxforderService.findById(JXFOrder.class, order.getId());
 		MaterialOrder mo = new MaterialOrder();
 		mo.setJxforderid(order.getId());
-		List materialorderlist = materialorderService.findAllByExample(mo);
+		List<MaterialOrder> materialorderlist = materialorderService.findAllByExample(mo);
+		//leibie, identity, materialId, thickness, color, length, materialcount, pinming, materialstatus,missingcount
+		String materialorderliststring = "";
+		for(int i = 0; i<materialorderlist.size(); i++) {
+			MaterialOrder tmp = materialorderlist.get(i);
+			String thicknessstring = (tmp.getOrderThickness()==null)?"":tmp.getOrderThickness().toString();
+			String lengthstring = (tmp.getOrderLength()==null)?"":tmp.getOrderLength().toString();
+			String materialcount = (tmp.getOrderCount()==null)?"":tmp.getOrderCount().toString();
+			String missingcount = (tmp.getMissingcount()==null)?"":tmp.getMissingcount().toString();
+			String thistmp = tmp.getLeibie()+";"+tmp.getId()+";"+tmp.getOrderMaterialId()+";"+thicknessstring+";"+tmp.getOrderColor()+";"+lengthstring+";"+materialcount+";"+tmp.getOrderPinming()+";"+tmp.getMaterialstatus()+";"+missingcount;
+			if (i==0){
+				materialorderliststring += thistmp;
+			}else{
+				materialorderliststring += "," + thistmp;
+			}
+		}
+		
 		order.setMaterialorderlist(materialorderlist);
+		order.setMaterialorderliststring(materialorderliststring);
 		model.addAttribute("order", order);
 		if (outstock != null && outstock.length() > 0) {
 			errors.reject("validation.materialcount.invalid", "Check " + outstock + " is out of stock!");
@@ -451,8 +514,9 @@ public class JXFOrderController extends BaseController {
 	@RequestMapping("/jxfordertotransactionout")
 	public String jxfordertotransactionout(Model model, JXFOrder order, Errors errors) {
 		String additionalmaterialstring = order.getAdditionalmaterialstring();
+		String calweightstring = order.getCalweight();
 		Double actweight = order.getActweight();
-		Double unitprice = order.getUnitprice();
+		String unitprice = order.getUnitprice();
 		Double actincome = order.getActincome();
 		Double additionalincome = order.getAdditionalincome();
 		Double totalincome = order.getTotalincome();
@@ -484,6 +548,7 @@ public class JXFOrderController extends BaseController {
 		 */
 
 		order.setAdditionalmaterialstring(additionalmaterialstring);
+		order.setCalweight(calweightstring);
 		order.setActweight(actweight);
 		order.setUnitprice(unitprice);
 		order.setActincome(actincome);

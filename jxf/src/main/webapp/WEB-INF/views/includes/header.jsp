@@ -2,8 +2,8 @@
 	<header id="titlebar">
 
 
-		<a href="http:///" name="logo"  id="logo"></a>
-
+		<!-- <a href="http:///" name="logo"  id="logo"></a> -->
+		
 		<ul id="top_menu">
            <!-- <li id ="index" class="current-menu-item">
 				<a href="/uitg/index">Home</a>

@@ -14,5 +14,7 @@ public interface CustomerDAO extends BaseDAO {
     public Page<Customer> findCustomer(int pageIndex, int pageSize, int userId);
 
 	List<Customer> findCustomersBySearchtext(String searchtext);
+
+	public List<Customer> findByCustomerName(String custname);
     
 }

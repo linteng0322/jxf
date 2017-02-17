@@ -51,7 +51,7 @@
 							<sp:message code="label.materialid" /><span class="required">*</span>
 						</sf:label>
 						<div class="col-sm-2">
-							<sf:input id="materialId" path="materialId" maxlength="20" readonly="true" style="text-transform:uppercase"
+							<sf:input id="materialId" path="materialId" maxlength="20" style="text-transform:uppercase"
 								cssClass="form-control" />
 						</div>
 					</div>
@@ -78,7 +78,7 @@
 							<sp:message code="label.thickness" />
 						</sf:label>
 						<div class="col-sm-2">
-							<sf:input path="thickness" maxlength="20" readonly="true" cssClass="form-control" />
+							<sf:input path="thickness" maxlength="20" cssClass="form-control" />
 						</div>
 					</div>
 					<%-- <div class="form-group">
@@ -95,7 +95,7 @@
 							<sp:message code="label.color" />
 						</sf:label>
 						<div class="col-sm-2">
-							<sf:input path="color" maxlength="20" readonly="true" cssClass="form-control" />
+							<sf:input path="color" maxlength="20" cssClass="form-control" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -103,7 +103,7 @@
 							<sp:message code="label.weight" />
 						</sf:label>
 						<div class="col-sm-2">
-							<sf:input path="weight" maxlength="20" readonly="true" cssClass="form-control" />
+							<sf:input path="weight" maxlength="20" cssClass="form-control" />
 						</div>
 					</div>
 					<%-- <div class="form-group">
@@ -120,7 +120,7 @@
 							<sp:message code="label.length" />
 						</sf:label>
 						<div class="col-sm-2">
-							<sf:input path="length" maxlength="20" readonly="true" cssClass="form-control" />
+							<sf:input path="length" maxlength="20" cssClass="form-control" />
 						</div>
 					</div>
 					<%-- <div class="form-group">

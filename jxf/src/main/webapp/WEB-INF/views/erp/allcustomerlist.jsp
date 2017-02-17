@@ -31,7 +31,11 @@
 		</div>
 
 		<div style="float: right; width: 80%;">
-
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<sp:message code="label.clientorfactory" />
+				</div>
+			</div>
 			<sf:form servletRelativeAction="searchcustomerlist" method="post"
 				modelAttribute="customer" cssClass="form-horizontal">
 				<sf:errors path="*" cssClass="alert alert-danger" element="div" />

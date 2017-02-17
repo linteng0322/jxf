@@ -117,6 +117,11 @@
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
 		<div style="float: right; width: 80%;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<sp:message code="label.materialgroup" />
+				</div>
+			</div>
 			<sf:form servletRelativeAction="savecreatematerialgroup"
 				method="post" modelAttribute="materialgroup"
 				cssClass="form-horizontal">
@@ -133,7 +138,7 @@
 							<span class="required">*</span>
 						</sf:label>
 						<div class="col-sm-2">
-							<sf:input id="materialgroupId" path="materialgroupId" maxlength="20" style="text-transform:uppercase"
+							<sf:input id="materialgroupId" path="materialgroupId" maxlength="40" style="text-transform:uppercase"
 								cssClass="form-control" />
 						</div>
 					</div>
@@ -142,7 +147,7 @@
 							<sp:message code="label.pinming" /><span class="required">*</span>
 						</sf:label>
 						<div class="col-sm-2">
-							<sf:input id="pinming" path="pinming" maxlength="20" required="true"
+							<sf:input id="pinming" path="pinming" maxlength="40" required="true"
 								cssClass="form-control" />
 						</div>
 					</div>

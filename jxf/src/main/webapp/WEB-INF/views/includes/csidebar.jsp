@@ -69,5 +69,9 @@ $(document).ready(function(){
 			href="<c:url value="/salesman/allsalesman"/>"> <sp:message
 					code="label.salesman" />
 		</a></li>
+		<li id="allmemo"><a
+			href="<c:url value="/memo/allmemo"/>"> <sp:message
+					code="label.memo" />
+		</a></li>
 	</sec:authorize>
 </ul>

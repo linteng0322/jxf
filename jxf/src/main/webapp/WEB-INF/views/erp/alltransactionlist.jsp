@@ -55,6 +55,10 @@
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
 		<div style="float: right; width: 80%;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+						<sp:message code="label.transactionsearch" />
+					</div>
 			<sf:form servletRelativeAction="searchtransaction" method="post"
 				modelAttribute="transaction" cssClass="form-horizontal">
 				<sf:errors path="*" cssClass="alert alert-danger" element="div" />
@@ -106,6 +110,7 @@
 					</div>
 				</div>
 			</sf:form>
+			</div>
 			<div class="panel panel-default">
 				<table
 					class="table table-striped table-bordered table-hover table-condensed">

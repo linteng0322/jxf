@@ -18,6 +18,22 @@
 	$(document).ready(function() {
 		$("#allmaterial").addClass("current-menu-item"); //Add "active" class to selected tab  
 	});
+	
+	function formatCurrency(num) {
+        num = num.toString().replace(/\$|\,/g,'');
+        if(isNaN(num))
+            num = "0";
+        sign = (num == (num = Math.abs(num)));
+        num = Math.floor(num*100+0.50000000001);
+        cents = num%100;
+        num = Math.floor(num/100).toString();
+        if(cents<10)
+            cents = "0" + cents;
+        for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+            num = num.substring(0,num.length-(4*i+3))+','+
+                    num.substring(num.length-(4*i+3));
+        return (((sign)?'':'-') + num + '.' + cents);
+    }
 </script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -30,6 +46,11 @@
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
 		<div style="float: right; width: 80%;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<sp:message code="label.materialmaintain" />
+			</div>
+		</div>
 			<div class="operation-bar">
 				<a href="<c:url value="/material/creatematerial"/>" title="Register">
 					<span class="glyphicon glyphicon-plus"></span>
@@ -52,6 +73,7 @@
 							<th><sp:message code="label.totalweight" /></th>
 							<th>&nbsp;</th>
 							<th>&nbsp;</th>
+							<th>&nbsp;</th>
 						</tr>
 					</thead>
 					<%--@elvariable id="users" type="java.util.List"--%>
@@ -72,10 +94,15 @@
 							<c:if test="${material.riskflag != '1'}">
 							<td style='width: 130px; padding: 4px;'><c:out value="${material.count}" /></td>
 							</c:if>
-							<td><c:out value="${material.totalWeight}" /></td>
+							<td>
+							<c:out value="${material.totalWeight}" /></td>
 							<td><a
 								href="<c:url value="/material/editmaterial?id=${material.id}"/>">
 									<span class="glyphicon glyphicon-edit"></span>
+							</a></td>
+							<td><a
+								href="<c:url value="/material/copymaterial?id=${material.id}"/>">
+									<span class="glyphicon glyphicon-tint"></span>
 							</a></td>
 							<td><a
 								href="javascript:if(confirm('确实要删除吗?'))location='<c:url value="/material/deletematerial?id=${material.id}"/>'">

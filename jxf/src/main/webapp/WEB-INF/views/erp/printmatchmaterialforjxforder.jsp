@@ -55,32 +55,6 @@
 		'material', popup_property);
 	} */
 	
-	function submitmatch(){
-		var appendstring;
-		var x = document.getElementsByName("sequence");
-		var i = x.length;
-		var materialorderstring;
-		var flag = "";
-		for (var j = 1; j <= i; j++) {
-			var elementid = "sequence" + j;
-			searchmaterial = "searchmaterial" + j;//materialorder identity
-			var searchmaterial = $('input:hidden[id="' + elementid + '"]').val();
-			elementid = "materialtype" + j;
-			var materialtype = $('input:hidden[id="' + elementid + '"]').val();
-			if (materialId!="") {
-				if (flag == "") {
-					appendstring = searchmaterial + ";" + materialtype;
-							flag = "has";
-				} else {
-					appendstring = appendstring + "," + searchmaterial + ";" + materialtype;
-				}
-			}
-			/* $('#materialchildrenstring', document)
-			.append(materialId);
-			alert($('#materialchildrenstring')); */
-		}
-		$('#matchmaterial').val(appendstring);
-	}
 	
 	function check() {
 		if(confirm('确实要出库吗?')){
@@ -266,7 +240,7 @@
 					<c:out value="${order.actincome}"/>
 				</div>
 				<sf:label path="actincome" cssClass="col-sm-2 control-label">
-					辅料金额
+					配件金额
 				</sf:label>
 				<div class="col-sm-1 control-label">
 					<c:out value="${order.additionalincome}"/>
