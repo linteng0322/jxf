@@ -38,7 +38,7 @@ public class JXFOrder extends IdEntity {
 	private String additionalmaterialstring;
 
 	private String memo;
-	private Integer expresscount;
+	private String expressinfo;
 	
 	private String materialorderpricestring;//save all unit price of all types
 	private String materialorderliststring;//for display of all materialorder
@@ -209,20 +209,21 @@ public class JXFOrder extends IdEntity {
 		this.memo = memo;
 	}
 
-	@Column(name = "EXPRESSCOUNT")
-	public Integer getExpresscount() {
-		return expresscount;
+	@Column(name = "EXPRESSINFO")
+	public String getExpressinfo() {
+		return expressinfo;
 	}
 
-	public void setExpresscount(Integer expresscount) {
-		this.expresscount = expresscount;
+	public void setExpressinfo(String expressinfo) {
+		this.expressinfo = expressinfo;
 	}
+	
 	
 	@Column(name = "MATERIALORDERPRICE")
 	public String getMaterialorderpricestring() {
 		return materialorderpricestring;
 	}
-
+	
 	public void setMaterialorderpricestring(String materialorderpricestring) {
 		this.materialorderpricestring = materialorderpricestring;
 	}

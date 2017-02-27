@@ -183,7 +183,7 @@ public class JXFOrderController extends BaseController {
 		workingorder.setAdditionalmaterialstring(order.getAdditionalmaterialstring());
 		workingorder.setAdditionalincome(order.getAdditionalincome());
 		workingorder.setMemo(order.getMemo());
-		workingorder.setExpresscount(order.getExpresscount());
+		workingorder.setExpressinfo(order.getExpressinfo());
 		ArrayList<MaterialOrder> list = new ArrayList();
 		// List <MaterialOrder>materialorderlist = order.getMaterialorderlist();
 		if (materialchildrenstring != null && materialchildrenstring != "") {// 拼接字符串，包含，id,
@@ -418,6 +418,43 @@ public class JXFOrderController extends BaseController {
 		}
 		return "erp/jxforder";
 	}
+	
+	@RequestMapping("/printjxforder")
+	public String printJxfOrder(Model model, JXFOrder order, Error errors) {
+		order = jxforderService.findById(JXFOrder.class, order.getId());
+		MaterialOrder mo = new MaterialOrder();
+		mo.setJxforderid(order.getId());
+		List<MaterialOrder> materialorderlist = materialorderService.findAllByExample(mo);
+		String materialorderliststring = "";
+		for(int i = 0; i<materialorderlist.size(); i++) {
+			MaterialOrder tmp = materialorderlist.get(i);
+			String thicknessstring = (tmp.getOrderThickness()==null)?"":tmp.getOrderThickness().toString();
+			String lengthstring = (tmp.getOrderLength()==null)?"":tmp.getOrderLength().toString();
+			String countstring = (tmp.getOrderCount()==null)?"":tmp.getOrderCount().toString();
+			String thistmp = tmp.getLeibie()+";"+tmp.getOrderMaterialId()+";"+thicknessstring+";"+tmp.getOrderColor()+";"+lengthstring+";"+countstring;
+			if (i==0){
+				materialorderliststring += thistmp;
+			}else{
+				materialorderliststring += "," + thistmp;
+			}
+		}
+		//model.addAttribute("materialorderliststring", materialorderliststring);
+		order.setMaterialorderlist(materialorderlist);
+		order.setMaterialorderliststring(materialorderliststring);
+		model.addAttribute("order", order);
+		String additionalmaterialstring = order.getAdditionalmaterialstring();
+		if (additionalmaterialstring != null && additionalmaterialstring.length() > 0) {
+			String[] additionalmaterials = additionalmaterialstring.split(",");
+			List additionalmateriallist = new ArrayList();// all rows
+			for (int i = 0; i < additionalmaterials.length; i++) {
+				String eachrow = additionalmaterials[i];
+				String[] eachparams = eachrow.split(";");
+				additionalmateriallist.add(eachparams);
+			}
+			model.addAttribute("additionalmateriallist", additionalmateriallist);
+		}
+		return "erp/printjxforder";
+	}
 
 	@RequestMapping("/deletejxforder")
 	public String deleteJxfOrder(Model model, JXFOrder order, Error errors) {
@@ -446,11 +483,32 @@ public class JXFOrderController extends BaseController {
 		String materialorderliststring = "";
 		for(int i = 0; i<materialorderlist.size(); i++) {
 			MaterialOrder tmp = materialorderlist.get(i);
+			
+			String mormgidentitystring = (tmp.getMormgidentity()==null)?"":tmp.getMormgidentity().toString();
+			
+			if(mormgidentitystring == ""){
+				//match this and save
+				Object o = getmaterial(tmp);
+				if(o instanceof Material){
+					Material m = (Material) o;
+					tmp.setMormgidentity(m.getId());
+					tmp.setOrderPinming(m.getPinming());
+					tmp.setMaterialstatus("set");
+					materialorderService.update(tmp);
+				} else if (o instanceof MaterialGroup) {
+					MaterialGroup mg = (MaterialGroup) o;
+					tmp.setMormgidentity(mg.getId());
+					tmp.setOrderPinming(mg.getPinming());
+					tmp.setMaterialstatus("set");
+					materialorderService.update(tmp);
+				}
+			}
 			String thicknessstring = (tmp.getOrderThickness()==null)?"":tmp.getOrderThickness().toString();
 			String lengthstring = (tmp.getOrderLength()==null)?"":tmp.getOrderLength().toString();
 			String materialcount = (tmp.getOrderCount()==null)?"":tmp.getOrderCount().toString();
 			String missingcount = (tmp.getMissingcount()==null)?"":tmp.getMissingcount().toString();
 			String thistmp = tmp.getLeibie()+";"+tmp.getId()+";"+tmp.getOrderMaterialId()+";"+thicknessstring+";"+tmp.getOrderColor()+";"+lengthstring+";"+materialcount+";"+tmp.getOrderPinming()+";"+tmp.getMaterialstatus()+";"+missingcount;
+			
 			if (i==0){
 				materialorderliststring += thistmp;
 			}else{
@@ -522,7 +580,7 @@ public class JXFOrderController extends BaseController {
 		Double totalincome = order.getTotalincome();
 		Boolean ispaid = order.getIspaid();
 		String memo = order.getMemo();
-		Integer expresscount = order.getExpresscount();
+		String expressinfo = order.getExpressinfo();
 		order = jxforderService.findById(JXFOrder.class, order.getId());
 		// 发货前先检查是否全部匹配，全部都够，此时不再需要检查
 		// order.setJxforderstatus("allset");
@@ -556,7 +614,7 @@ public class JXFOrderController extends BaseController {
 		order.setTotalincome(totalincome);
 		order.setIspaid(ispaid);
 		order.setMemo(memo);
-		order.setExpresscount(expresscount);
+		order.setExpressinfo(expressinfo);
 		// order.setJxforderstatus("completed");
 		jxforderService.update(order);
 
@@ -1137,7 +1195,7 @@ public class JXFOrderController extends BaseController {
 			return mo;
 		} else if (o instanceof MaterialGroup) {
 			MaterialGroup mg = (MaterialGroup) o;
-			mo.setType("material");
+			mo.setType("materialgroup");
 			mo.setOrderMaterialId(mg.getMaterialgroupId());
 			mo.setOrderThickness(null);
 			mo.setOrderColor(null);

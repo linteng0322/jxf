@@ -25,6 +25,12 @@
 		initleibietables();
 		setcustomerlist();
 		setlist();
+		
+		var x = document.getElementsByName("materialtype");
+		var i = x.length;
+		if(i==0){
+			addmoreType();
+		}
 
 	});
 	function initleibietables() {
@@ -154,7 +160,7 @@
 		$('#length_' + typenumber+'_'+ row).val(materialparams[3]);
 	}
 	function addmultipleElement(typenumber) {
-		for (var i = 0; i < 10; i++) {
+		for (var i = 0; i < 5; i++) {
 			addElement(typenumber, "","","","","");
 		}
 	}
@@ -198,7 +204,7 @@
 	function addmaterialtypetable() {
 		var x = document.getElementsByName("materialtype");
 		var i = x.length+1;
-		var appendstring = "<a onclick='addmultipleElement("+i+")' title='Register'> <span class='glyphicon glyphicon-plus'>类别"+i+"</span></a><p>"
+		var appendstring = "<a onclick='addmultipleElement("+i+")' title='Register'> <span class='glyphicon glyphicon-plus' >类别"+i+"</span></a><p>"
 			+"<div id='materialtype"+i+"' name='materialtype' class='panel panel-default'>"
 			+"<table id='searchmaterialtable"+i+"' class='table table-striped table-bordered table-hover table-condensed'>"
 			+"	<thead><tr><th><sp:message code='label.id' /></th>"
@@ -526,6 +532,13 @@
 						<button type="button" class="btn btn-default"
 							onclick="history.go(-1);">
 							<sp:message code="operate.cancel" />
+						</button>
+					</div>
+					
+					<div class="col-md-offset-3 col-sm-1">
+						<button type="button" class="btn btn-default"
+							onclick="javascript:location='<c:url value="/jxforder/printjxforder?id=${order.id}" />'">
+							<sp:message code="label.print" />
 						</button>
 					</div>
 				</div>

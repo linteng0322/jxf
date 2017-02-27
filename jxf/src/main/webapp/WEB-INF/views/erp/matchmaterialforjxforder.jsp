@@ -39,6 +39,8 @@
 			var materialstatus = materialorder[8];
 			var missingcount = materialorder[9];
 			
+			
+			
 			var x = document.getElementsByName("materialtype");
 			var materialtypelength = x.length;//eg: leibie 5: find i=3, then add 2 more type;
 			if(materialtypelength<leibie){
@@ -65,11 +67,11 @@
 				var thisrow = calweighttable[row].split(";");
 				var thisleibie = thisrow[0];
 				var sequence = row+1;
-				thisleibie = "<input name='pricesequence' type='hidden' value='"+sequence+"' /><input name='leibie' id='leibie"+sequence+"' value='"+thisleibie+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />";
+				thisleibie = "<input name='pricesequence' type='hidden' value='"+sequence+"' /><input name='leibie' id='leibie"+sequence+"' value='"+thisleibie+"' style='width: 20px; padding: 4px; border: none; background: transparent;' />";
 				var thisleibiecalweight = thisrow[1];
 				var thisleibieactweight = (thisrow.length>2)?thisrow[2]:0;
 				var thisleibieunitprice = (thisrow.length>3)?thisrow[3]:0;
-				thisleibiecalweight = "<input name='calweightinput' id='calweightinput"+sequence+"' value='"+thisleibiecalweight+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />";
+				thisleibiecalweight = "<input name='calweightinput' id='calweightinput"+sequence+"' value='"+thisleibiecalweight+"' style='width: 100px; padding: 4px; border: none; background: transparent;' />";
 				var thisactweight = "<input name='actweightinput' id='actweightinput"+sequence+"' value='"+thisleibieactweight+"' onkeyup='calcuincome()' />";
 				var thisunitprice = "<input name='unitpriceinput' id='unitpriceinput"+sequence+"' value='"+thisleibieunitprice+"' onkeyup='calcuincome()' />";
 				pricelist = "<tr><td>"+thisleibie+"</td><td>"+thisleibiecalweight+"</td><td>"+thisactweight+"</td><td>"+thisunitprice+"</td></tr>";
@@ -96,12 +98,20 @@
 		var originalmisscount = "<input id='missingcount_"+typenumber+"_"+i+ "' type='text' name='outcount' value='"+missingcount+"' style='width: 80px; padding: 4px;' />";
 		var updatedmissingcount = "<input id='missingcount_"+typenumber+"_"+i+ "' type='text' name='outcount' value='' style='width: 60px; padding: 4px; border: none; background: transparent;' />";
 		var missingcountstring = (missingcount!=0) ? originalmisscount : updatedmissingcount;
+		var pinmingred = "";
+		if(pinming=="null"){
+			pinmingred = "color:red";
+			pinming = "无此物料";
+		}
+		var pinmingstring = "<input id='pinming_"+typenumber+"_"+i+ "' name='pinming_"+typenumber+"' value='"+pinming
+							+"' style='width: 60px; padding: 4px; border: none; background: transparent; "+pinmingred+"' />";
+		
 		var	appendstring = 		"<tr><td>"
-								+ "<input id='sequence_"+typenumber+"_"+i+ "' name='sequence_"+typenumber+"' value=" +i + " style='width: 60px; padding: 4px; border: none; background: transparent;'/>"
+								+ "<input id='sequence_"+typenumber+"_"+i+ "' name='sequence_"+typenumber+"' value=" +i + " style='width: 20px; padding: 4px; border: none; background: transparent;'/>"
 								+ "<input id='identity"+typenumber+"_"+i+ "' type='hidden' name='identity_"+typenumber+"' value='' style='width: 60px; padding: 4px; border: none; background: transparent;' />"
 								+ "<input id='materialtype_"+typenumber+"_"+i+ "' type='hidden' name='leibie_"+typenumber+"' value='"+typenumber+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />"
 								+ "</td><td>"
-								+ "<input id='materialId_"+typenumber+"_"+i+ "' name='materialId_"+typenumber+"' value='"+materialId+"' list='json-datalist' style='width: 60px; padding: 4px; border: none; background: transparent;'"
+								+ "<input id='materialId_"+typenumber+"_"+i+ "' name='materialId_"+typenumber+"' value='"+materialId+"' list='json-datalist' style='width: 150px; padding: 4px; border: none; background: transparent;'"
 								+ "oninput='inputthisrow("+typenumber+","+ i+ ", this)'/>"
 								+ "<datalist id='json-datalist'></datalist>"
 								+ "</td><td>"
@@ -113,7 +123,7 @@
 								+ "</td><td>"
 								+ "<input id='materialcount_"+typenumber+"_"+i+ "' name='materialcount_"+typenumber+"' value='"+materialcount+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />"
 								+ "</td><td>"
-								+ "<input id='pinming_"+typenumber+"_"+i+ "' name='pinming_"+typenumber+"' value='"+pinming+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />"
+								+ pinmingstring
 								+ "</td><td>"
 								+ "<input id='materialstatus_"+typenumber+"_"+i+ "' name='materialstatus_"+typenumber+"' value='"+materialstatus+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />"
 								+ "</td><td>"
@@ -417,6 +427,7 @@
 				<div class="panel panel-default">
 				
 				 <div id="materialtypelist">
+				  
 				 </div>
 					<%-- <table id="searchmaterialtable"
 						class="table table-striped table-bordered table-hover table-condensed">
@@ -533,7 +544,7 @@
 									<td><input
 										id='additionalsequence<c:out value="${loop.index+1}"/>'
 										name="additionalsequence" value="${loop.index+1}"
-										style='width: 80px; padding: 4px; border: none; background: transparent;'
+										style='width: 20px; padding: 4px; border: none; background: transparent;'
 										readonly="readonly" /></td>
 									<td><input
 										id='additionalmaterialname<c:out value="${loop.index+1}"/>'
@@ -573,11 +584,11 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<sf:label path="expresscount" cssClass="col-sm-2 control-label">
+					<sf:label path="expressinfo" cssClass="col-sm-2 control-label">
 						物流票号
 					</sf:label>
 					<div class="col-sm-2">
-						<sf:textarea path="expresscount" cols="20" rows="1" />
+						<sf:textarea path="expressinfo" cols="60" rows="1" />
 					</div>
 				</div>
 				<%-- <div class="form-group">
