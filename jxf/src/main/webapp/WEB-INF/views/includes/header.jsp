@@ -47,7 +47,7 @@
 				<a href="/uitg/contactus">Contact Us</a>
 			</li> -->
 			<li id="erp">
-				<a href="/jxf/erp">Login</a>
+				<a href="/jxf/erp"><sp:message code="app.login"/></a>
 				<ul class="dropdown-menu" role="menu">                 
                     <li><a href="<c:url value="/logout"/>">
                         <sp:message code="app.logout"/>
