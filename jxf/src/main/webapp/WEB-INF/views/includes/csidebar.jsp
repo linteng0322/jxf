@@ -70,7 +70,7 @@ $(document).ready(function(){
 					code="label.salesman" />
 		</a></li>
 		<li id="allmemo"><a
-			href="<c:url value="/memo/allmemo"/>"> <sp:message
+			href="<c:url value="/memojxforder/searchmemojxforder"/>"> <sp:message
 					code="label.memo" />
 		</a></li>
 	</sec:authorize>

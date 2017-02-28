@@ -72,8 +72,8 @@
 				var thisleibieactweight = (thisrow.length>2)?thisrow[2]:0;
 				var thisleibieunitprice = (thisrow.length>3)?thisrow[3]:0;
 				thisleibiecalweight = "<input name='calweightinput' id='calweightinput"+sequence+"' value='"+thisleibiecalweight+"' style='width: 100px; padding: 4px; border: none; background: transparent;' />";
-				var thisactweight = "<input name='actweightinput' id='actweightinput"+sequence+"' value='"+thisleibieactweight+"' style='width: 100px;' onkeyup='calcuincome()' />";
-				var thisunitprice = "<input name='unitpriceinput' id='unitpriceinput"+sequence+"' value='"+thisleibieunitprice+"' style='width: 100px;' onkeyup='calcuincome()' />";
+				var thisactweight = "<input name='actweightinput' id='actweightinput"+sequence+"' value='"+thisleibieactweight+"' style='width: 100px; ' onkeyup='calcuincome()' />";
+				var thisunitprice = "<input name='unitpriceinput' id='unitpriceinput"+sequence+"' value='"+thisleibieunitprice+"' style='width: 100px; ' onkeyup='calcuincome()' />";
 				pricelist = "<tr><td>"+thisleibie+"</td><td>"+thisleibiecalweight+"</td><td>"+thisactweight+"</td><td>"+thisunitprice+"</td></tr>";
 				$('#pricetable', document).append(pricelist);
 			}
@@ -124,19 +124,12 @@
 								+ "<input id='materialcount_"+typenumber+"_"+i+ "' name='materialcount_"+typenumber+"' value='"+materialcount+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />"
 								+ "</td><td>"
 								+ pinmingstring
-								+ "</td><td>"
-								+ "<input id='materialstatus_"+typenumber+"_"+i+ "' name='materialstatus_"+typenumber+"' value='"+materialstatus+"' style='width: 60px; padding: 4px; border: none; background: transparent;' />"
-								+ "</td><td>"
-								+ missingcountstring
-								+ "</td><td>"
-								+ checkboxstring
 								+ "</td></tr>";
 								
 			$('#searchmaterialtable'+typenumber, document).append(appendstring);
 			//document.getElementsByName("searchmaterialtable1").append(appendstring);
 	}
 	function addmoreType() {
-		
 		addmaterialtypetable();
 	}
 	function addmaterialtypetable() {
@@ -152,14 +145,9 @@
 			+"			<th><sp:message code='label.length' /></th>"
 			+"			<th><sp:message code='label.count' /></th>"
 			+"			<th><sp:message code='label.pinming' /></th>"
-			+"			<th>状态</th>"
-			+"			<th>欠货数量</th>"
-			+"			<th>出库</th></tr></thead><tbody></tbody></table>"
-			+"";
-			
+			+"</tr></thead><tbody></tbody></table>";
 			$('#materialtypelist', document).append(appendstring);
 	}
-	
 	function check() {
 		if (confirm('确实要出库吗?')) {
 			// check all material count set
@@ -195,7 +183,6 @@
 					return false;
 				}
 			}
-
 			return true;
 		}
 		return false;
@@ -256,7 +243,6 @@
 						* additionalmaterialunitprice;
 			}
 		}
-		
 		var totalactweight = 0;
 		var materialincome = 0;
 		var calweightstring = "";
@@ -272,7 +258,6 @@
 			if(j==1) calweightstring = thisleibiestring + ";" + thiscalweightstring + ";" + thisactweightstring + ";" + thisunitpricestring;
 			else calweightstring = calweightstring + "," + thisleibiestring + ";" + thiscalweightstring + ";" + thisactweightstring + ";" + thisunitpricestring;
 		}
-		
 		$('#calweight').val(calweightstring);
 		$('#actweight').val(totalactweight);
 		$('#additionalmaterialstring').val(additionalmaterialstring);
@@ -281,105 +266,9 @@
 		//$('#totalincome').val(actweight * unitprice + additionalincome);
 		$('#totalincome').val(additionalincome+materialincome*1);
 	}
-	function selectallmo() {
-		var objselectall = document.getElementsByName("selectall");
-		var objpreparetoout = document.getElementsByName("preparetoout");
-		if (objselectall[0].checked == true) {
-			for (k in objpreparetoout) {
-				if (objpreparetoout[k].disabled == true)
-					continue;
-				objpreparetoout[k].checked = true;
-			}
-		} else {
-			for (k in objpreparetoout) {
-				if (objpreparetoout[k].disabled == true)
-					continue;
-				objpreparetoout[k].checked = false;
-			}
-		}
-	}
-	function outselected() {
-		var checked = check();
-		if (checked == false)
-			return false;
-		//var objpreparetoout = document.getElementsByName("preparetoout");
-		var objpreparetoout = $('input:checkbox[name="preparetoout"]');
-		var objoutcount = $('input:text[name="outcount"]');
-		var check_val = [];
-		//this for out count, if 0 then no. if >0, then out the count
-		var outcount_val = [];
-		for (k in objpreparetoout) {
-			if (objpreparetoout[k].disabled == true)
-				continue;
-			else if (objpreparetoout[k].checked) {
-				if (objpreparetoout[k].value != ""
-						&& objpreparetoout[k].value != "undefined") {
-					check_val.push(objpreparetoout[k].value);
-					//alert(objoutcount[k].value);
-					outcount_val.push(objoutcount[k].value);
-				}
-			}
-		}
-		if (check_val != "") {
-			$
-					.ajax({
-						type : "POST",
-						dataType : "text",
-						url : "${pageContext.request.contextPath}/jxforder/checkmaterialorderstock?identitylist="
-								+ check_val+"&outcountlist="+outcount_val,
-						//data:"",
-						contentType : "text/html; charset=utf-8",
-						error : function(XMLHttpRequest, textStatus,
-								errorThrown) {
-							//alert(XMLHttpRequest.status);
-							//alert(XMLHttpRequest.readyState);
-							//alert(textStatus);
-							alert("出错了");
-						},
-						success : function(data) {
-							if (data != "true") {
-								alert(data + "库存不够。");
-							} else {
-								//alert("可以出库");
-								$
-										.ajax({
-											type : "POST",
-											dataType : "text",
-											url : "${pageContext.request.contextPath}/jxforder/outmaterialorderstock?identitylist="
-													+ check_val+"&outcountlist="+outcount_val,
-											//data:"",
-											contentType : "text/html; charset=utf-8",
-											error : function(XMLHttpRequest,
-													textStatus, errorThrown) {
-												//alert(XMLHttpRequest.status);
-												//alert(XMLHttpRequest.readyState);
-												//alert(textStatus);
-												alert("出错了");
-											},
-											success : function(data) {
-												alert("出库成功");
-												//window.location.reload();
-												for (k in objpreparetoout) {
-													if (objpreparetoout[k].checked) {
-														//obj[k].parent().previous().text="completed";
-														objpreparetoout[k].disabled = true;
-														//$($obj[k].parent().previousSibling().children().get(0)).find('input').val("1");
-													}
-												}
-											}
-										});
-							}
-						}
-					});
-		} else {
-			alert("请选择要出库的物料。");
-		}
-	}
 </script>
-
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-
 <body class="home">
 	<div id="page">
 		<%@ include file="../includes/header.jsp"%>
@@ -387,7 +276,7 @@
 			<%@ include file="../includes/csidebar.jsp"%>
 		</div>
 		<div style="float: right; width: 80%;">
-			<sf:form servletRelativeAction="jxfordertotransactionout"
+			<sf:form servletRelativeAction="memojxfordertotransactionout"
 				method="post" modelAttribute="order" cssClass="form-horizontal">
 				<sf:errors path="*" cssClass="alert alert-danger" element="div" />
 				<div class="panel panel-default">
@@ -416,112 +305,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<div style="float: right">
-						<label> 全选 </label> <input type="checkbox" name="selectall"
-							onclick="selectallmo()">
-						<button type="button" class="btn btn-primary" style="align: right"
-							onclick="outselected()">出库</button>
-					</div>
-				</div>
 				<div class="panel panel-default">
-				
 				 <div id="materialtypelist">
-				  
 				 </div>
-					<%-- <table id="searchmaterialtable"
-						class="table table-striped table-bordered table-hover table-condensed">
-						<thead>
-							<tr>
-								<th><sp:message code="label.id" /></th>
-								<th><sp:message code="label.material" /></th>
-								<th><sp:message code="label.thickness" /></th>
-								<th><sp:message code="label.color" /></th>
-								<th><sp:message code="label.length" /></th>
-								<th><sp:message code="label.count" /></th>
-								<th><sp:message code="label.pinming" /></th>
-								<th>状态</th>
-								<th>剩余数量</th>
-								<th>出货</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach var="ordermaterial" items="${order.materialorderlist}"
-								varStatus="loop">
-
-								<tr>
-									<td><input id='sequence<c:out value="${loop.index+1}"/>'
-										name="sequence" type="text" readonly="readonly"
-										value="${loop.index+1}"
-										style='width: 60px; padding: 4px; border: none; background: transparent;' />
-										<input id='identity<c:out value="${loop.index+1}"/>'
-										name="identity" type="hidden" value="${ordermaterial.id}"
-										style='width: 60px; padding: 4px; border: none; background: transparent;' /></td>
-									<td><input id='materialId<c:out value="${loop.index+1}"/>'
-										name="materialId" type="text" readonly="readonly"
-										value='<c:out value="${ordermaterial.orderMaterialId}"/>'
-										style='width: 60px; padding: 4px; border: none; background: transparent;' /></td>
-									<td><input id='thickness<c:out value="${loop.index+1}"/>'
-										name="thickness" type="text" readonly="readonly"
-										value='<c:out value="${ordermaterial.orderThickness}"/>'
-										style='width: 60px; padding: 4px; border: none; background: transparent;' /></td>
-									<td><input id='color<c:out value="${loop.index+1}"/>'
-										name="color" type="text" readonly="readonly"
-										value='<c:out value="${ordermaterial.orderColor}"/>'
-										style='width: 60px; padding: 4px; border: none; background: transparent;' /></td>
-									<td><input id='length<c:out value="${loop.index+1}"/>'
-										name="length" type="text" readonly="readonly"
-										value='<c:out value="${ordermaterial.orderLength}"/>'
-										style='width: 60px; padding: 4px; border: none; background: transparent;' /></td>
-									<td><input
-										id='materialcount<c:out value="${loop.index+1}"/>'
-										name="materialcount" type="text" readonly="readonly"
-										value='<c:out value="${ordermaterial.orderCount}"/>'
-										style='width: 60px; padding: 4px; border: none; background: transparent;' /></td>
-									<td><input
-										id='matchmaterialPinming<c:out value="${loop.index+1}"/>'
-										name="matchmaterialPinming" type="text" readonly="readonly"
-										value='<c:out value="${ordermaterial.orderPinming}"/>'
-										style='width: 130px; padding: 4px; border: none; background: transparent;' />
-										<input id='materialtype<c:out value="${loop.index+1}"/>'
-										name="materialtype" type="hidden"
-										value='<c:out value="${ordermaterial.type}"/>'
-										style='width: 60px; padding: 4px;' /> <input
-										id='searchmaterial<c:out value="${loop.index+1}"/>'
-										name="searchmaterial" type="hidden"
-										value='<c:out value="${ordermaterial.mormgidentity}"/>'
-										style='width: 60px; padding: 4px;' /></td>
-									<td><input
-										value='<c:out value="${ordermaterial.materialstatus=='completed'?'出库完成':'需出库'}"/>'
-										style='width: 80px; padding: 4px; border: none; background: transparent;' />
-									</td>
-									<!-- partial out count -->
-									
-									<td>
-									<c:if
-											test="${ordermaterial.missingcount!=0}">
-											<input name="outcount"
-										value='<c:out value="${ordermaterial.missingcount}"/>'
-										style='width: 80px; padding: 4px;' /></c:if>
-										<c:if
-											test="${ordermaterial.missingcount==0}">
-											<input name="outcount"
-										value='<c:out value="${ordermaterial.missingcount}"/>'
-										style='width: 80px; padding: 4px; border: none; background: transparent;' /></c:if>
-									</td>
-									<td><c:if
-											test="${ordermaterial.materialstatus=='completed'}">
-											<input type="checkbox" name="preparetoout"
-												disabled="disabled" checked="checked" />
-										</c:if> <c:if test="${ordermaterial.materialstatus != 'completed'}">
-											<input type="checkbox" name="preparetoout"
-												value="${ordermaterial.id}" />
-										</c:if></td>
-
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table> --%>
 				</div>
 				<sf:input path="additionalmaterialstring"
 					id="additionalmaterialstring" name="additionalmaterialstring"
@@ -563,7 +349,7 @@
 										name="additionalmaterialunitprice" type="text"
 										required="required"
 										value='<c:out value="${additionalmaterial[2]}"/>'
-										onkeyup='calcuincome()' style='width: 100px; padding: 4px;' /></td>
+										onkeyup='calcuincome()' style='width: 100px; padding: 4px; border: none; background: transparent;' /></td>
 								</tr>
 							</c:forEach>
 					</table>
@@ -591,30 +377,6 @@
 						<sf:textarea path="expressinfo" cols="60" rows="1" />
 					</div>
 				</div>
-				<%-- <div class="form-group">
-				
-					<label class="col-sm-2 control-label"> <sp:message
-							code="label.calweight" />
-					</label>
-					<div class="col-sm-2">
-						<c:out value="${order.calweight}" />
-					</div>
-					<sf:label path="actweight" cssClass="col-sm-2 control-label">
-						<sp:message code="label.actweight" />
-					</sf:label>
-					<div class="col-sm-2">
-						<sf:input id="actweight" path="actweight" required="true"
-							onkeyup='calcuincome()' maxlength="20" cssClass="form-control" />
-					</div>
-					<sf:label path="unitprice" cssClass="col-sm-2 control-label">
-						<sp:message code="label.unitprice" />
-					</sf:label>
-					<div class="col-sm-2">
-						<sf:input id="unitprice" path="unitprice" required="true"
-							onkeyup="calcuincome()" maxlength="20" cssClass="form-control" />
-					</div>
-				</div> --%>
-
 				<div class="form-group">
 					<sf:label path="actincome" cssClass="col-sm-2 control-label">
 						铝材金额
@@ -664,12 +426,6 @@
 						<button type="button" class="btn btn-default"
 							onclick="history.go(-1);">
 							<sp:message code="operate.cancel" />
-						</button>
-					</div>
-					<div class="col-md-offset-2 col-sm-1">
-						<button type="button" class="btn btn-default"
-							onclick="javascript:location='<c:url value="/jxforder/printmatchmaterialforjxforder?id=${order.id}" />'">
-							<sp:message code="label.print" />
 						</button>
 					</div>
 				</div>
