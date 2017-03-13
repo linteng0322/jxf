@@ -28,6 +28,7 @@ import com.jxf.oa.entity.Material;
 import com.jxf.oa.entity.MaterialGroup;
 import com.jxf.oa.entity.MaterialOrder;
 import com.jxf.oa.entity.Salesman;
+import com.jxf.oa.entity.SysConf;
 import com.jxf.oa.entity.Transaction;
 import com.jxf.oa.entity.User;
 import com.jxf.oa.services.CustomerService;
@@ -36,12 +37,16 @@ import com.jxf.oa.services.MaterialGroupService;
 import com.jxf.oa.services.MaterialOrderService;
 import com.jxf.oa.services.MaterialService;
 import com.jxf.oa.services.SalesmanService;
+import com.jxf.oa.services.SysConfService;
 import com.jxf.oa.services.TransactionService;
 import com.jxf.oa.services.UserService;
 
 @Controller
 @RequestMapping("/jxforder")
 public class JXFOrderController extends BaseController {
+	@Autowired
+	protected SysConfService sysconfService;
+	
 	@Autowired
 	protected JXFOrderService jxforderService;
 
@@ -420,7 +425,12 @@ public class JXFOrderController extends BaseController {
 	}
 	
 	@RequestMapping("/printjxforder")
-	public String printJxfOrder(Model model, JXFOrder order, Error errors) {
+	public String printJxfOrder(Model model, JXFOrder order, Errors errors) {
+		if(order.getId()==null){
+			errors.reject("validation.invaidorder");
+			model.addAttribute("order", order);
+			return "erp/jxforder";
+		}
 		order = jxforderService.findById(JXFOrder.class, order.getId());
 		MaterialOrder mo = new MaterialOrder();
 		mo.setJxforderid(order.getId());
@@ -453,11 +463,24 @@ public class JXFOrderController extends BaseController {
 			}
 			model.addAttribute("additionalmateriallist", additionalmateriallist);
 		}
+		SysConf sysconf = sysconfService.findAll(SysConf.class).get(0);
+		model.addAttribute("sysconf", sysconf);
 		return "erp/printjxforder";
 	}
 
 	@RequestMapping("/deletejxforder")
-	public String deleteJxfOrder(Model model, JXFOrder order, Error errors) {
+	public String deleteJxfOrder(Model model, @RequestParam(required = false, defaultValue = "1") Integer page,
+			 @Valid @ModelAttribute("order") JXFOrder order, Errors errors) {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      	User user = (User)userDetails;
+      	
+      	if(user.getIsadmin()==null || !user.getIsadmin()){
+      		errors.reject("validation.user.notadmin");
+      		Page<JXFOrder> jxforderlist = jxforderService.findAllJxfOrder(page, getPageSize(), user.getId());
+    		model.addAttribute("page", jxforderlist);
+    		model.addAttribute("order", order);
+    		return "erp/alljxforder"; 
+      	}
 		order = jxforderService.findById(JXFOrder.class, order.getId());
 		jxforderService.delete(order);
 		return "redirect:/jxforder/alljxforder";
@@ -543,13 +566,47 @@ public class JXFOrderController extends BaseController {
 		order = jxforderService.findById(JXFOrder.class, order.getId());
 		MaterialOrder mo = new MaterialOrder();
 		mo.setJxforderid(order.getId());
-		List materialorderlist = materialorderService.findAllByExample(mo);
-		order.setMaterialorderlist(materialorderlist);
-		model.addAttribute("order", order);
-		if (outstock != null && outstock.length() > 0) {
-			errors.reject("validation.materialcount.invalid", "Check " + outstock + " is out of stock!");
-			errors.reject("validation.required", new String[] { outstock }, "Material Id is requried");
+		List<MaterialOrder> materialorderlist = materialorderService.findAllByExample(mo);
+		//leibie, identity, materialId, thickness, color, length, materialcount, pinming, materialstatus,missingcount
+		String materialorderliststring = "";
+		for(int i = 0; i<materialorderlist.size(); i++) {
+			MaterialOrder tmp = materialorderlist.get(i);
+			
+			String mormgidentitystring = (tmp.getMormgidentity()==null)?"":tmp.getMormgidentity().toString();
+			
+			if(mormgidentitystring == ""){
+				//match this and save
+				Object o = getmaterial(tmp);
+				if(o instanceof Material){
+					Material m = (Material) o;
+					tmp.setMormgidentity(m.getId());
+					tmp.setOrderPinming(m.getPinming());
+					tmp.setMaterialstatus("set");
+					materialorderService.update(tmp);
+				} else if (o instanceof MaterialGroup) {
+					MaterialGroup mg = (MaterialGroup) o;
+					tmp.setMormgidentity(mg.getId());
+					tmp.setOrderPinming(mg.getPinming());
+					tmp.setMaterialstatus("set");
+					materialorderService.update(tmp);
+				}
+			}
+			String thicknessstring = (tmp.getOrderThickness()==null)?"":tmp.getOrderThickness().toString();
+			String lengthstring = (tmp.getOrderLength()==null)?"":tmp.getOrderLength().toString();
+			String materialcount = (tmp.getOrderCount()==null)?"":tmp.getOrderCount().toString();
+			String missingcount = (tmp.getMissingcount()==null)?"":tmp.getMissingcount().toString();
+			String thistmp = tmp.getLeibie()+";"+tmp.getId()+";"+tmp.getOrderMaterialId()+";"+thicknessstring+";"+tmp.getOrderColor()+";"+lengthstring+";"+materialcount+";"+tmp.getOrderPinming()+";"+tmp.getMaterialstatus()+";"+missingcount;
+			
+			if (i==0){
+				materialorderliststring += thistmp;
+			}else{
+				materialorderliststring += "," + thistmp;
+			}
 		}
+		
+		order.setMaterialorderlist(materialorderlist);
+		order.setMaterialorderliststring(materialorderliststring);
+		model.addAttribute("order", order);
 		String additionalmaterialstring = order.getAdditionalmaterialstring();
 		if (additionalmaterialstring != null && additionalmaterialstring.length() > 0) {
 			String[] additionalmaterials = additionalmaterialstring.split(",");
@@ -561,6 +618,8 @@ public class JXFOrderController extends BaseController {
 			}
 			model.addAttribute("additionalmateriallist", additionalmateriallist);
 		}
+		SysConf sysconf = sysconfService.findAll(SysConf.class).get(0);
+		model.addAttribute("sysconf", sysconf);
 		return "erp/printmatchmaterialforjxforder";
 	}
 

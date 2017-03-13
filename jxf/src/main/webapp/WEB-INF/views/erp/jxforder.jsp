@@ -351,6 +351,15 @@
 
 		$('#additionalmaterialstring').val(additionalmaterialstring);
 	}
+	function printorder(){
+		var orderid = $('input:hidden[id="id"]').val();
+		if(orderid=="")
+			alert("订单无效");
+		else{
+			window.location.href="/jxf/jxforder/printjxforder?id="+orderid;
+		}
+		//javascript:location='<c:url value="/jxforder/printjxforder?id=${order.id}" />'
+	}
 </script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -404,66 +413,6 @@
 					class="glyphicon glyphicon-plus">添加新类别</span>
 				</a>
 				<div id="materialtypelist">
-					<%-- <a onclick="addmultipleElement()" title="Register"> <span
-						class="glyphicon glyphicon-plus"></span>
-					</a>
-					<div id="materialtype" class="panel panel-default">
-						<table id="searchmaterialtable"
-							class="table table-striped table-bordered table-hover table-condensed">
-							<thead>
-								<tr>
-									<th><sp:message code="label.id" /></th>
-									<th><sp:message code="label.material" /></th>
-									<th><sp:message code="label.thickness" /></th>
-									<th><sp:message code="label.color" /></th>
-									<th><sp:message code="label.length" /></th>
-									<th><sp:message code="label.count" /></th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach var="ordermaterial" items="${order.materialorderlist}"
-									varStatus="loop">
-	
-									<tr>
-										<td><input id='sequence<c:out value="${loop.index+1}"/>'
-											name="sequence" type="text" value="${loop.index+1}"
-											style='width: 100px; padding: 4px;' /> <input
-											id='identity<c:out value="${loop.index+1}"/>' name="identity"
-											type="hidden" value="${ordermaterial.id}"
-											style='width: 100px; padding: 4px;' />
-											<input id='leibie<c:out value="${loop.index+1}"/>'
-											name="leibie" type="text" value="${ordermaterial.leibie}"
-											style='width: 100px; padding: 4px;' /></td>
-										<td><input list="json-datalist"
-											id='materialId<c:out value="${loop.index+1}"/>'
-											name="materialId" type="text"
-											value='<c:out value="${ordermaterial.orderMaterialId}"/>'
-											style='width: 100px; padding: 4px; text-transform: uppercase'
-											oninput="inputthisrow(<c:out value="${loop.index+1}"/>, this)" />
-											<datalist id="json-datalist">
-											</datalist></td>
-										<td><input id='thickness<c:out value="${loop.index+1}"/>'
-											name="thickness" type="text"
-											value='<c:out value="${ordermaterial.orderThickness}"/>'
-											style='width: 100px; padding: 4px;' /></td>
-										<td><input id='color<c:out value="${loop.index+1}"/>'
-											name="color" type="text"
-											value='<c:out value="${ordermaterial.orderColor}"/>'
-											style='width: 100px; padding: 4px;' /></td>
-										<td><input id='length<c:out value="${loop.index+1}"/>'
-											name="length" type="text"
-											value='<c:out value="${ordermaterial.orderLength}"/>'
-											style='width: 100px; padding: 4px;' /></td>
-										<td><input
-											id='materialcount<c:out value="${loop.index+1}"/>'
-											name="materialcount" type="text"
-											value='<c:out value="${ordermaterial.orderCount}"/>'
-											style='width: 100px; padding: 4px;' /></td>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
-					</div> --%>
 				</div>
 				
 				<a onclick="addmultipleadditionalmaterial()" title="Register"> <span
@@ -542,7 +491,7 @@
 					
 					<div class="col-md-offset-3 col-sm-1">
 						<button type="button" class="btn btn-default"
-							onclick="javascript:location='<c:url value="/jxforder/printjxforder?id=${order.id}" />'">
+							onclick="printorder()">
 							<sp:message code="label.print" />
 						</button>
 					</div>

@@ -38,19 +38,22 @@ public class MaterialController extends BaseController {
 	public String list(Model model, @RequestParam(required = false, defaultValue = "1") Integer page) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = (User) userDetails;
-
-		Page<Material> materiallists = materialService.findAllMaterial(page, getPageSize(), user.getId());
+		Material material = new Material();
+		Page<Material> materiallists = materialService.findAllMaterial(material, page, getPageSize(), user.getId());
 		model.addAttribute("page", materiallists);
 		return "erp/materiallist";
 	}
 
 	@RequestMapping("/allmateriallist")
-	public String allMaterialList(Model model, @RequestParam(required = false, defaultValue = "1") Integer page) {
+	public String allMaterialList(Model model, @RequestParam(required = false, defaultValue = "1") Integer page, 
+			@Valid @ModelAttribute("material") Material material, Errors errors) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = (User) userDetails;
-		Page<Material> materiallists = materialService.findAllMaterial(page, getPageSize(), user.getId());
+		Page<Material> materiallists = materialService.findAllMaterial(material, page, getPageSize(), user.getId());
 		model.addAttribute("page", materiallists);
-
+		if(errors.hasErrors()){
+			
+		}
 		return "erp/allmateriallist";
 	}
 
@@ -122,6 +125,18 @@ public class MaterialController extends BaseController {
 
 	@RequestMapping("/saveeditmaterial")
 	public String saveeditMaterial(Model model, @Valid @ModelAttribute("material") Material material, Errors errors) {
+		Material originalM = materialService.findById(Material.class, material.getId());
+		if(originalM.getCount()!=null&&material.getCount()!=null&&originalM.getCount()!=material.getCount()){
+			//update stock count, check if admin, if no, return
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	      	User user = (User)userDetails;
+	      	
+	      	if(user.getIsadmin()==null || !user.getIsadmin()){
+	      		errors.reject("validation.user.notadmin");
+	      		model.addAttribute("material", material);
+	    		return "erp/editmaterial";
+	      	}
+		}
 		SimpleDateFormat dateformat1 = new SimpleDateFormat("yyyyMMddHHmmss");
 		if (material.getCount() != null && material.getRiskcount() != null
 				&& material.getCount() < material.getRiskcount()) {
@@ -141,10 +156,21 @@ public class MaterialController extends BaseController {
 	}
 
 	@RequestMapping("/deletematerial")
-	public String deleteMaterial(@RequestParam Integer id) {
-		Material material = new Material();
+	public String deleteMaterial(Model model,@RequestParam Integer id, @RequestParam(required = false, defaultValue = "1") Integer page, 
+			@Valid @ModelAttribute("material") Material material, Errors errors) {
+		material = new Material();
 		material.setId(id);
 		try {
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	      	User user = (User)userDetails;
+	      	
+	      	if(user.getIsadmin()==null || !user.getIsadmin()){
+	      		errors.reject("validation.user.notadmin");
+	      		Material m = new Material();
+	      		Page<Material> materiallists = materialService.findAllMaterial(m, page, getPageSize(), user.getId());
+	    		model.addAttribute("page", materiallists);
+	      		return "erp/allmateriallist";
+	      	}
 			materialService.delete(material);
 		} catch (Exception e) {
 			e.printStackTrace();

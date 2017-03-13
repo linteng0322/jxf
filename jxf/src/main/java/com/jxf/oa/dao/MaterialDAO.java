@@ -11,6 +11,6 @@ public interface MaterialDAO extends BaseDAO {
     
 	public int findTotalSize(Criteria criteria);
 
-    public Page<Material> findMaterial(int pageIndex, int pageSize, int userId);
+    public Page<Material> findMaterial(Material material, int pageIndex, int pageSize, int userId);
     
 }

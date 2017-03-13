@@ -76,6 +76,15 @@
             });  
               
         }  
+        
+        $(function () {
+            $("#loginform").keypress(function (e) {
+                if (e.which == 13) {// 判断所按是否回车键  
+                	return false;
+                    } 
+            });
+        }); 
+        
         </script>
 
 </head>
@@ -139,7 +148,7 @@
 
                     <div class="form-group">
                         <div class="col-md-offset-3 col-md-1">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" onclick="presubmit()" class="btn btn-primary">
                                 <sp:message code="app.login"/>
                             </button>
                         </div>

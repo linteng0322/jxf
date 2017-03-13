@@ -1,32 +1,24 @@
 package com.jxf.oa.entity;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "MEMO")
-public class Memo extends IdEntity {
-
+@Table(name = "SYSCONF")
+public class SysConf extends IdEntity {
 	private Integer id;
-	private String title;// auto generated based on time;
-	private String detail;//for display of all materialorder
-	
-	public Memo() {
+	private String companyname;
+	private String phone;
+	private String address;
+
+	public SysConf() {
 	}
 
-	public Memo(Integer id) {
+	public SysConf(Integer id) {
 		this.id = id;
 	}
 
@@ -41,22 +33,32 @@ public class Memo extends IdEntity {
 		this.id = id;
 	}
 	
-	@Column(name = "TITLE")
-	public String getTitle() {
-		return title;
+	@Column(name = "COMPANYNAME")
+	public String getCompanyname() {
+		return companyname;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setCompanyname(String companyname) {
+		this.companyname = companyname;
 	}
 
-	@Column(name = "DETAIL", length=2000)
-	public String getDetail() {
-		return detail;
+	
+	@Column(name="PHONE")
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setDetail(String detail) {
-		this.detail = detail;
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	@Column(name="ADDRESS")
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	@Override
@@ -75,7 +77,7 @@ public class Memo extends IdEntity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Memo other = (Memo) obj;
+		SysConf other = (SysConf) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -83,5 +85,7 @@ public class Memo extends IdEntity {
 			return false;
 		return true;
 	}
+
+	
 
 }

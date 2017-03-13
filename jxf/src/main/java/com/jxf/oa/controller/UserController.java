@@ -75,6 +75,70 @@ public class UserController extends BaseAdminController {
         return "admin/user/list";
     }
     
+    @RequestMapping("/jxfusers")
+    public String listjxfUsers(Model model, @ModelAttribute User user,Errors errors) {
+    	
+        List<User> users = userService.findAll(User.class);
+        model.addAttribute("users", users);
+
+        return "erp/alljxfusers";
+    }
+    
+    @RequestMapping("/managejxfuser")
+    public String managejxfUsers(Model model, User user) {
+    	user = userService.findById(User.class, user.getId());
+    	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      	User currentuser = (User)userDetails;
+      	model.addAttribute("user", user);
+        return "erp/managejxfuser";
+    }
+    @RequestMapping("/savemanagejxfuser")
+    public String savemanagejxfUsers(Model model, User user, Errors errors) {
+
+    	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      	User currentuser = (User)userDetails;
+      	
+      	if(currentuser.getIsadmin()==null || !currentuser.getIsadmin()){
+      		errors.reject("validation.user.notadmin");
+      		return "erp/managejxfuser";
+      	}
+      	Boolean isadmin = user.getIsadmin();
+      	user = userService.findById(User.class, user.getId());
+      	user.setIsadmin(isadmin);
+      	user.setUpdatedBy(currentuser);
+      	user.setUpdatedOn(new Date());
+      	userService.update(user);
+      	return "redirect:/user/jxfusers/";
+    }
+    
+    @RequestMapping("/deletejxfuser")
+    public String deletejxfUsers(Model model, User user, Errors errors) {
+    	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      	User currentuser = (User)userDetails;
+      	
+      	if(currentuser.getIsadmin()==null || !currentuser.getIsadmin()){
+      		errors.reject("validation.user.notadmin");
+      		List<User> users = userService.findAll(User.class);
+            model.addAttribute("users", users);
+            return "erp/alljxfusers";
+      	}
+      	if(currentuser.getId().equals(user.getId())){
+      		errors.reject("validation.user.deleteself");
+      		List<User> users = userService.findAll(User.class);
+            model.addAttribute("users", users);
+            return "erp/alljxfusers";
+      	}
+    	user = userService.findById(User.class, user.getId());
+    	try{
+    		userService.delete(user);
+    	}
+    	catch(Exception e){
+    		errors.reject("validation.user.notadmin");
+      		return "redirect:/user/jxfusers/";
+    	}
+    	return "redirect:/user/jxfusers/";
+    }
+    
     @RequestMapping("/add")
     public String addUser(Model model, User user,@RequestParam(required = false, defaultValue = "C") String mode) {    	
     	 UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

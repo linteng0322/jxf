@@ -52,9 +52,8 @@
 					<thead>
 						<tr>
 							<th><sp:message code="label.id" /></th>
-							<th><sp:message code="label.client" /></th>
-							<%-- <th><sp:message code="label.phone" /></th>
-							<th><sp:message code="label.address" /></th> --%>
+							<th>标题</th>
+							<th><sp:message code="label.creationdate" /></th>
 							<th>&nbsp;</th>
 							<th>&nbsp;</th>
 						</tr>
@@ -63,20 +62,21 @@
 					<c:forEach var="memo" items="${page.list}" varStatus="loop">
 						<tr>
 							<td><c:out value="${loop.index + 1}" /></td>
-							
+							<td><c:out value="${memo.title}" /></td>
+							<td><c:out value="${memo.createdOn}" /></td>
 							<td><a
 								href="<c:url value="/memo/editmemo?id=${memo.id}"/>">
 									<span class="glyphicon glyphicon-edit"></span>
 							</a></td>
 							<td><a
-								href="<c:url value="/memo/deletememo?id=${memo.id}"/>">
+								href="javascript:if(confirm('确实要删除吗?'))location='<c:url value="/memo/deletememo?id=${memo.id}"/>'">
 									<span class="glyphicon glyphicon-trash"></span>
 							</a></td>
 						</tr>
 					</c:forEach>
 				</table>
 				<d:pagination page="${page.pageIndex}" total="${page.totalPage}"
-					uri="/memo/allmemolist" />
+					uri="/memo/allmemo" />
 			</div>
 		</div>
 

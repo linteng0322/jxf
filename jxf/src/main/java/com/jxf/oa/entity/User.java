@@ -22,6 +22,7 @@ public class User extends IdEntity implements UserDetails {
 	private String username;
     private String password;
     private String email;
+    private Boolean isadmin;
     private List<GrantedAuthority> authorities;
     public User() {
     }
@@ -78,7 +79,16 @@ public class User extends IdEntity implements UserDetails {
         this.email = email;
     }
     
-    @Transient
+    @Column(name = "ISADMIN")
+    public Boolean getIsadmin() {
+		return isadmin;
+	}
+
+	public void setIsadmin(Boolean isadmin) {
+		this.isadmin = isadmin;
+	}
+
+	@Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

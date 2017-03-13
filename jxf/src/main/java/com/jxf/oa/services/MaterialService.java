@@ -18,7 +18,7 @@ import com.jxf.oa.entity.User;
  */
 public interface MaterialService extends BaseService, UserDetailsService {
 
-	Page<Material> findAllMaterial(int pageIndex, int pageSize, int userId);
+	Page<Material> findAllMaterial(Material material, int pageIndex, int pageSize, int userId);
 	
 	
 }

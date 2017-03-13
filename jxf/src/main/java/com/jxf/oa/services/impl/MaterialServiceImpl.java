@@ -51,9 +51,9 @@ public class MaterialServiceImpl extends BaseServiceImpl implements MaterialServ
 	}
 
 	@Override
-	public Page<Material> findAllMaterial(int pageIndex, int pageSize,int userId) {
+	public Page<Material> findAllMaterial(Material material, int pageIndex, int pageSize,int userId) {
 		// TODO Auto-generated method stub
-		return materialDAO.findMaterial(pageIndex, pageSize, userId);
+		return materialDAO.findMaterial(material, pageIndex, pageSize, userId);
 	}
 	 
 }

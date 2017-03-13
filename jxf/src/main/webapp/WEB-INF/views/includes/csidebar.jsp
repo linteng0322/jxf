@@ -19,6 +19,22 @@ $(document).ready(function(){
          }
      });
 });
+$.ajax({
+	type : "POST",
+	dataType : "text",
+	url : "${pageContext.request.contextPath}/sysconf/getcompanyname",
+	//data:"",
+	contentType : "text/html; charset=utf-8",
+	error : function(XMLHttpRequest, textStatus, errorThrown) {
+		//alert(XMLHttpRequest.status);
+		//alert(XMLHttpRequest.readyState);
+		//alert(textStatus);
+		alert("Get company name error!");
+	},
+	success : function(data) {
+		$("#companyname").html(data);
+	}
+});
 </script>
 <ul class="dropdown-menu" style="display: block !important;">
 	<sec:authorize
@@ -69,9 +85,25 @@ $(document).ready(function(){
 			href="<c:url value="/salesman/allsalesman"/>"> <sp:message
 					code="label.salesman" />
 		</a></li>
-		<li id="allmemo"><a
+		<%-- <li id="allmemo"><a
 			href="<c:url value="/memojxforder/searchmemojxforder"/>"> <sp:message
 					code="label.memo" />
+		</a></li> --%>
+		<li id="allmemo"><a
+			href="<c:url value="/memo/allmemo"/>"> <sp:message
+					code="label.memo" />
+		</a></li>
+		<%-- <li id="allmemo"><a
+			href="<c:url value="/user/jxfusers"/>"> <sp:message
+					code="app.menu.setting.user" />
+		</a></li> --%>
+		<%-- <li id="sysconf"><a
+			href="<c:url value="/sysconf/setsysconf"/>"> <sp:message
+					code="label.companyname" />
+		</a></li> --%>
+		<li id="sysconf"><a
+			href="<c:url value="/sysconf/setappconf"/>"> <sp:message
+					code="app.menu.setting" />
 		</a></li>
 	</sec:authorize>
 </ul>

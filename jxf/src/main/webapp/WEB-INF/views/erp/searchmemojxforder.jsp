@@ -86,7 +86,7 @@
 		<div style="float: right; width: 80%;">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<sp:message code="label.orderreport" />
+					<sp:message code="label.memo" />
 				</div>
 				<sf:form servletRelativeAction="searchmemojxforder" method="post"
 					modelAttribute="jxforder" cssClass="form-horizontal">

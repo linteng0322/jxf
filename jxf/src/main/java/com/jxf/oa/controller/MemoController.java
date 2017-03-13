@@ -72,23 +72,14 @@ public class MemoController extends BaseController {
 		SimpleDateFormat sf = new SimpleDateFormat(TIME_FORMAT);
 		List<Memo> memolist = memoService.findMemoListByExample(memo, user.getId());
 
-		//Double listcalweight = 0.0;
-		Double listactweight = 0.0;
-		Double listtotalincome = 0.0;
+		
 		for (int i = 0; i < memolist.size(); i++) {
 			Memo o = memolist.get(i);
 			//if (o.getCalweight() != null)
 				//listcalweight = listcalweight + o.getCalweight();
-			if (o.getActweight() != null)
-				listactweight = listactweight + o.getActweight();
-			if (o.getTotalincome() != null)
-				listtotalincome = listtotalincome + o.getTotalincome();
+			
 		}
-		//model.addAttribute("listcalweight", listcalweight);
-		model.addAttribute("listactweight", listactweight);
-		model.addAttribute("listtotalincome", listtotalincome);
-		model.addAttribute("fromdate", "");
-		model.addAttribute("todate", new Date());
+		
 		model.addAttribute("list", memolist);
 		model.addAttribute("memo", memo);
 		return "erp/searchmemo";
@@ -101,6 +92,34 @@ public class MemoController extends BaseController {
 		memoService.save(memo);
 		return "redirect:/memo/allmemo";
 	}
-
 	
+	@RequestMapping("/editmemo")
+	public String editOrder(Model model, @Valid @ModelAttribute Memo memo, String materialchildrenstring,
+			Errors errors) {
+		Memo thismemo = memoService.findById(Memo.class, memo.getId());
+		model.addAttribute("memo", thismemo);
+		return "erp/editmemo";
+	}
+	
+	@RequestMapping("/saveeditmemo")
+	public String saveeditMemo(Model model, @Valid @ModelAttribute Memo memo, String materialchildrenstring,
+			Errors errors) {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = (User) userDetails;
+		memo.setUpdatedOn(new Date());
+		memo.setUpdatedBy(user);
+		memoService.update(memo);
+		return "redirect:/memo/allmemo";
+	}
+
+	@RequestMapping("/deletememo")
+	public String deleteMemo(Model model, @Valid @ModelAttribute Memo memo, String materialchildrenstring,
+			Errors errors) {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = (User) userDetails;
+		memo = memoService.findById(Memo.class, memo.getId());
+		memoService.delete(memo);
+		return "redirect:/memo/allmemo";
+	}
+
 }

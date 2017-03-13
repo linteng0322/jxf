@@ -28,9 +28,14 @@ public class MaterialDAOImpl extends BaseDAOImpl implements MaterialDAO{
 	    }
 
 	    @Override
-	    public Page<Material> findMaterial(int pageIndex, int pageSize, int userId) {
+	    public Page<Material> findMaterial(Material material, int pageIndex, int pageSize, int userId) {
 
 	        Criteria criteria = session().createCriteria(Material.class);
+	        
+	        if(material !=null && material.getMaterialId()!=null&&material.getMaterialId()!=""){
+	        	criteria.add(Restrictions.eq("materialId", material.getMaterialId()));
+	        }
+	        
 	        int totalSize = findTotalSize(criteria);
 	        int totalPage = totalSize / pageSize;
 	        if(totalSize % pageSize != 0) {
@@ -41,7 +46,10 @@ public class MaterialDAOImpl extends BaseDAOImpl implements MaterialDAO{
 	            pageIndex = totalPage;
 	        }
 
-	        criteria.addOrder(org.hibernate.criterion.Order.desc("materialId"));
+	        criteria.addOrder(org.hibernate.criterion.Order.asc("materialId"));
+	        criteria.addOrder(org.hibernate.criterion.Order.asc("thickness"));
+	        criteria.addOrder(org.hibernate.criterion.Order.asc("color"));
+	        criteria.addOrder(org.hibernate.criterion.Order.asc("length"));
 	        criteria.setFirstResult((pageIndex - 1) * pageSize);
 	        criteria.setMaxResults(pageSize);
 

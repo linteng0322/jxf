@@ -115,6 +115,10 @@ public class MaterialGroupController extends BaseController {
 		SimpleDateFormat dateformat1 = new SimpleDateFormat("yyyyMMddHHmmss");
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = (User) userDetails;
+		String materialchildren = materialgroup.getMaterialchildren();
+		if(materialchildren==null){
+			materialgroup.setMaterialchildren("");
+		}
 		materialgroup.setCreatedBy(user);
 		materialgroup.setCreatedOn(new Date());
 		materialgroup.setUpdatedBy(user);// Annie update
@@ -129,7 +133,7 @@ public class MaterialGroupController extends BaseController {
 		materialgroup = materialgroupService.findById(MaterialGroup.class, materialgroup.getId());
 		
 		List<Material> materialchildrenlist = new ArrayList();
-		if(materialgroup.getMaterialchildren()!=null){
+		if(materialgroup.getMaterialchildren()!=null&&materialgroup.getMaterialchildren().length()>0){
 			String[] children = materialgroup.getMaterialchildren().split(",");
 			List<String> materialchildrenidlist = Arrays.asList(children);
 			Iterator i = materialchildrenidlist.iterator();
@@ -160,8 +164,19 @@ public class MaterialGroupController extends BaseController {
 	}
 	
 	@RequestMapping("/deletematerialgroup")
-    public String deleteMaterialGroup(@RequestParam Integer id) {
-        MaterialGroup materialgroup = new MaterialGroup();
+    public String deleteMaterialGroup(Model model, @RequestParam Integer id, @RequestParam(required = false, defaultValue = "1") Integer page, 
+			@Valid @ModelAttribute("materialgroup") MaterialGroup materialgroup, Errors errors) {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      	User user = (User)userDetails;
+      	
+      	if(user.getIsadmin()==null || !user.getIsadmin()){
+      		errors.reject("validation.user.notadmin");
+      		Page<MaterialGroup> materialgrouplists = materialgroupService.findAllMaterialGroup(page, getPageSize(), user.getId());
+    		model.addAttribute("page", materialgrouplists);
+
+    		return "erp/allmaterialgrouplist";
+      	}
+        materialgroup = new MaterialGroup();
         materialgroup.setId(id);
         try {
         	materialgroupService.delete(materialgroup);

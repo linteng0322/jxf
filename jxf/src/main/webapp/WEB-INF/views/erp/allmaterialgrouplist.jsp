@@ -35,48 +35,53 @@
 					<sp:message code="label.materialgroup" />
 				</div>
 			</div>
-			<div class="operation-bar">
-				<a href="<c:url value="/materialgroup/creatematerialgroup"/>" title="Register">
-					<span class="glyphicon glyphicon-plus"></span>
-				</a>
-			</div>
-			<div class="panel panel-default">
-				<table
-					class="table table-striped table-bordered table-hover table-condensed">
-					<thead>
-						<tr>
-							<th><sp:message code="label.id" /></th>
-							<th><sp:message code="label.materialid" /></th>
-							<th><sp:message code="label.pinming" /></th>
-							<%-- <th><sp:message code="label.materialgroup" /></th> --%>
-							<th>&nbsp;</th>
-							<th>&nbsp;</th>
-						</tr>
-					</thead>
-					<%--@elvariable id="users" type="java.util.List"--%>
-					<c:forEach var="materialgroup" items="${page.list}" varStatus="loop">
-					<c:if test="${materialgroup.materialgroupId!=''}">
-						<tr>
-							<td><c:out value="${loop.index + 1}" /></td>
-							<td><c:out value="${materialgroup.materialgroupId}" /></td>
-							<td><c:out value="${materialgroup.pinming}" /></td>
-							<%-- <td><c:out value="${materialgroup.materialchildren}" /></td> --%>
-							
-							<td><a
-								href="<c:url value="/materialgroup/editmaterialgroup?id=${materialgroup.id}"/>">
-									<span class="glyphicon glyphicon-edit"></span>
-							</a></td>
-							<td><a
-								href="<c:url value="/materialgroup/deletematerialgroup?id=${materialgroup.id}"/>">
-									<span class="glyphicon glyphicon-trash"></span>
-							</a></td>
-						</tr>
-						</c:if>
-					</c:forEach>
-				</table>
-				<d:pagination page="${page.pageIndex}" total="${page.totalPage}"
-					uri="/materialgroup/allmaterialgrouplist" />
-			</div>
+			<sf:form servletRelativeAction="allmaterialgrouplist" method="post"
+				modelAttribute="materialgroup" cssClass="form-horizontal">
+				<sf:errors path="*" cssClass="alert alert-danger" element="div" />
+				<div class="operation-bar">
+					<a href="<c:url value="/materialgroup/creatematerialgroup"/>"
+						title="Register"> <span class="glyphicon glyphicon-plus"></span>
+					</a>
+				</div>
+				<div class="panel panel-default">
+					<table
+						class="table table-striped table-bordered table-hover table-condensed">
+						<thead>
+							<tr>
+								<th><sp:message code="label.id" /></th>
+								<th><sp:message code="label.materialid" /></th>
+								<th><sp:message code="label.pinming" /></th>
+								<%-- <th><sp:message code="label.materialgroup" /></th> --%>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<%--@elvariable id="users" type="java.util.List"--%>
+						<c:forEach var="materialgroup" items="${page.list}"
+							varStatus="loop">
+							<c:if test="${materialgroup.materialgroupId!=''}">
+								<tr>
+									<td><c:out value="${loop.index + 1}" /></td>
+									<td><c:out value="${materialgroup.materialgroupId}" /></td>
+									<td><c:out value="${materialgroup.pinming}" /></td>
+									<%-- <td><c:out value="${materialgroup.materialchildren}" /></td> --%>
+
+									<td><a
+										href="<c:url value="/materialgroup/editmaterialgroup?id=${materialgroup.id}"/>">
+											<span class="glyphicon glyphicon-edit"></span>
+									</a></td>
+									<td><a
+										href="javascript:if(confirm('确实要删除吗?'))location='<c:url value="/materialgroup/deletematerialgroup?id=${materialgroup.id}"/>'">
+											<span class="glyphicon glyphicon-trash"></span>
+									</a></td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</table>
+					<d:pagination page="${page.pageIndex}" total="${page.totalPage}"
+						uri="/materialgroup/allmaterialgrouplist" />
+				</div>
+			</sf:form>
 		</div>
 
 	</div>
