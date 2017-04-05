@@ -69,7 +69,7 @@
 
 		<div style="width: 100%;">
 
-			<sf:form servletRelativeAction="searchmaterial" method="post"
+			<sf:form servletRelativeAction="searchmaterialtry" method="post"
 				modelAttribute="material" cssClass="form-horizontal">
 				<sf:errors path="*" cssClass="alert alert-danger" element="div" />
 				<%-- <input id="po" name="po" type="hidden" value="${po}"> --%>
@@ -78,8 +78,13 @@
 				<%-- <input id="materialchildrenstring" name="materialchildrenstring" type="hidden"
 					value="${materialchildrenstring}"> --%>
 
-
 				<div class="form-group">
+					<sf:label path="materialId" cssClass="col-sm-3 control-label">
+						<sp:message code="label.materialid" />
+					</sf:label>
+					<div class="col-sm-3">
+						<sf:input path="materialId" maxlength="20" style="text-transform:uppercase" cssClass="form-control" />
+					</div>
 					<div class="col-sm-2">
 						<button type="submit" class="btn btn-primary">
 							<sp:message code="label.search" />

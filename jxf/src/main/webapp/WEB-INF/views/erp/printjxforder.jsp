@@ -177,21 +177,21 @@
 					<sp:message code="label.orderdate" />:<c:out value='${order.createdOn}'/>
 					<div id="materialtypelist"></div>
 					配件
-						<table id="additionalmaterialtable" style="border:1px; width: 200px; min-height: 20px; line-height: 14px; text-align: left; border-collapse: collapse;" >
+						<table id="additionalmaterialtable" class="table table-striped table-bordered table-hover table-condensed" style=""font-size:10px" >
 						<thead>
 							<tr>
-								<th style="border:1px solid;"><sp:message code="label.id" /></th>
-								<th style="border:1px solid;"><sp:message code="label.additionalmaterial" /></th>
-								<th style="border:1px solid;">数量</th>
+								<th><sp:message code="label.id" /></th>
+								<th><sp:message code="label.additionalmaterial" /></th>
+								<th>数量</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="additionalmaterial"
 								items="${additionalmateriallist}" varStatus="loop">
 								<tr>
-									<td style="border:1px solid; padding: 4px;"><c:out value="${loop.index+1}" /></td>
-									<td style="border:1px solid; padding: 4px;"><c:out value="${additionalmaterial[0]}" /></td>
-									<td style="border:1px solid; padding: 4px;"><c:out value="${additionalmaterial[1]}" /></td>
+									<td><c:out value="${loop.index+1}" /></td>
+									<td><c:out value="${additionalmaterial[0]}" /></td>
+									<td><c:out value="${additionalmaterial[1]}" /></td>
 								</tr>
 							</c:forEach>
 					</table>

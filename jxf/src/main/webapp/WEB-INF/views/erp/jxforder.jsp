@@ -181,7 +181,7 @@
 								+ "<input id='materialtype_"+typenumber+"_"+i+ "' type='hidden' name='leibie_"+typenumber+"' value='"+typenumber+"' style='width: 100px; padding: 4px;' />"
 								+ "</td><td>"
 								+ "<input id='materialId_"+typenumber+"_"+i+ "' type='text' name='materialId_"+typenumber+"' value='"+materialId+"' list='json-datalist' style='width: 280px; padding: 4px; text-transform:uppercase;'"
-								+ "oninput='inputthisrow("+typenumber+","+ i+ ", this)'/>"
+								+ "onchange='inputthisrow("+typenumber+","+ i+ ", this)'/>"
 								+ "<datalist id='json-datalist'></datalist>"
 								+ "</td><td>"
 								+ "<input id='thickness_"+typenumber+"_"+i+ "' type='text' name='thickness_"+typenumber+"' value='"+thickness+"' style='width: 100px; padding: 4px;' />"
